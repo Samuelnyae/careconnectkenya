@@ -161,8 +161,17 @@ function InventoryPage() {
                   {items.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell>
-                        <div className="font-medium">{p.name}</div>
-                        {p.batch_number && <div className="text-xs text-muted-foreground">Batch {p.batch_number}</div>}
+                        <div className="flex items-center gap-3">
+                          {p.image_url ? (
+                            <img src={p.image_url} alt={p.name} className="h-10 w-10 rounded object-cover border" />
+                          ) : (
+                            <div className="h-10 w-10 rounded border bg-muted" />
+                          )}
+                          <div>
+                            <div className="font-medium">{p.name}</div>
+                            {p.batch_number && <div className="text-xs text-muted-foreground">Batch {p.batch_number}</div>}
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{p.category ?? "—"}</TableCell>
                       <TableCell>KSh {Number(p.unit_price).toLocaleString()}</TableCell>
