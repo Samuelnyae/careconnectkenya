@@ -13,7 +13,7 @@ export const Route = createFileRoute("/pos")({
   component: () => <ProtectedLayout><POSPage /></ProtectedLayout>,
 });
 
-type Product = { id: string; name: string; unit_price: number; stock_qty: number; category: string | null };
+type Product = { id: string; name: string; unit_price: number; stock_qty: number; category: string | null; image_url: string | null };
 type CartLine = { product: Product; qty: number };
 
 function POSPage() {
@@ -26,7 +26,7 @@ function POSPage() {
 
   const load = useCallback(async () => {
     if (!currentTenantId) return;
-    const { data } = await supabase.from("products").select("id, name, unit_price, stock_qty, category").eq("tenant_id", currentTenantId).order("name");
+    const { data } = await supabase.from("products").select("id, name, unit_price, stock_qty, category, image_url").eq("tenant_id", currentTenantId).order("name");
     setProducts((data ?? []) as Product[]);
   }, [currentTenantId]);
   useEffect(() => { void load(); }, [load]);
@@ -105,6 +105,13 @@ function POSPage() {
               disabled={p.stock_qty === 0}
               className="group rounded-xl border bg-card p-4 text-left shadow-[var(--shadow-sm)] transition hover:border-primary/50 hover:shadow-[var(--shadow-md)] disabled:cursor-not-allowed disabled:opacity-50"
             >
+              <div className="aspect-square w-full overflow-hidden rounded-lg bg-muted mb-3 flex items-center justify-center">
+                {p.image_url ? (
+                  <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" loading="lazy" />
+                ) : (
+                  <ShoppingCart className="h-8 w-8 text-muted-foreground/40" />
+                )}
+              </div>
               <div className="text-xs uppercase tracking-wide text-muted-foreground">{p.category ?? "General"}</div>
               <div className="mt-1 font-medium">{p.name}</div>
               <div className="mt-3 flex items-center justify-between">
