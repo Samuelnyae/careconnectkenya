@@ -21,15 +21,18 @@ type Product = {
   id: string; name: string; sku: string | null; barcode: string | null; category: string | null;
   unit_price: number; cost_price: number; stock_qty: number; reorder_level: number;
   batch_number: string | null; expiry_date: string | null; supplier: string | null;
+  image_url: string | null;
 };
 
 function InventoryPage() {
   const { currentTenantId } = useAuth();
   const [items, setItems] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     name: "", sku: "", barcode: "", category: "", unit_price: "", cost_price: "",
     stock_qty: "", reorder_level: "10", batch_number: "", expiry_date: "", supplier: "",
+    image_url: "",
   });
 
   const load = useCallback(async () => {
@@ -55,12 +58,30 @@ function InventoryPage() {
       batch_number: form.batch_number || null,
       expiry_date: form.expiry_date || null,
       supplier: form.supplier || null,
+      image_url: form.image_url || null,
     });
     if (error) return toast.error(error.message);
     toast.success("Product added");
     setOpen(false);
-    setForm({ name: "", sku: "", barcode: "", category: "", unit_price: "", cost_price: "", stock_qty: "", reorder_level: "10", batch_number: "", expiry_date: "", supplier: "" });
+    setForm({ name: "", sku: "", barcode: "", category: "", unit_price: "", cost_price: "", stock_qty: "", reorder_level: "10", batch_number: "", expiry_date: "", supplier: "", image_url: "" });
     void load();
+  };
+
+  const onUpload = async (file: File) => {
+    if (!currentTenantId) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${currentTenantId}/${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(path, file, { upsert: false });
+    if (error) {
+      toast.error(error.message);
+      setUploading(false);
+      return;
+    }
+    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+    setForm((f) => ({ ...f, image_url: data.publicUrl }));
+    setUploading(false);
+    toast.success("Image uploaded");
   };
 
   const statusBadge = (p: Product) => {
@@ -84,9 +105,27 @@ function InventoryPage() {
           <DialogTrigger asChild>
             <Button className="w-full sm:w-auto bg-[#0a3d2e] text-white hover:bg-[#0a3d2e]/90 shadow-[var(--shadow-glow)]"><Plus className="mr-2 h-4 w-4" />Add product</Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>Add product</DialogTitle></DialogHeader>
             <div className="grid gap-3 sm:grid-cols-2">
+              <div className="sm:col-span-2 space-y-2">
+                <Label>Product image</Label>
+                <div className="flex items-center gap-3">
+                  {form.image_url ? (
+                    <img src={form.image_url} alt="preview" className="h-16 w-16 rounded-md object-cover border" />
+                  ) : (
+                    <div className="h-16 w-16 rounded-md border border-dashed flex items-center justify-center text-xs text-muted-foreground">No image</div>
+                  )}
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    disabled={uploading}
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) void onUpload(f); }}
+                    className="cursor-pointer"
+                  />
+                </div>
+                {uploading && <p className="text-xs text-muted-foreground">Uploading…</p>}
+              </div>
               <div className="sm:col-span-2 space-y-1"><Label>Name *</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
               <div className="space-y-1"><Label>SKU</Label><Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} /></div>
               <div className="space-y-1"><Label>Barcode</Label><Input value={form.barcode} onChange={(e) => setForm({ ...form, barcode: e.target.value })} /></div>
@@ -122,8 +161,17 @@ function InventoryPage() {
                   {items.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell>
-                        <div className="font-medium">{p.name}</div>
-                        {p.batch_number && <div className="text-xs text-muted-foreground">Batch {p.batch_number}</div>}
+                        <div className="flex items-center gap-3">
+                          {p.image_url ? (
+                            <img src={p.image_url} alt={p.name} className="h-10 w-10 rounded object-cover border" />
+                          ) : (
+                            <div className="h-10 w-10 rounded border bg-muted" />
+                          )}
+                          <div>
+                            <div className="font-medium">{p.name}</div>
+                            {p.batch_number && <div className="text-xs text-muted-foreground">Batch {p.batch_number}</div>}
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{p.category ?? "—"}</TableCell>
                       <TableCell>KSh {Number(p.unit_price).toLocaleString()}</TableCell>
