@@ -1,5 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, ShoppingCart, Package, LogOut, Building2 } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, LogOut, Building2, Settings, Shield } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sidebar,
   SidebarContent,
@@ -19,11 +21,19 @@ const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Pharmacy POS", url: "/pos", icon: ShoppingCart },
   { title: "Inventory", url: "/inventory", icon: Package },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
   const path = useRouterState({ select: (r) => r.location.pathname });
-  const { currentTenant, signOut } = useAuth();
+  const { currentTenant, signOut, user } = useAuth();
+  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) { setIsPlatformAdmin(false); return; }
+    void supabase.from("platform_admins").select("user_id").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => setIsPlatformAdmin(!!data));
+  }, [user]);
 
   return (
     <Sidebar collapsible="icon">
@@ -57,6 +67,16 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {isPlatformAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={path === "/admin"}>
+                    <Link to="/admin">
+                      <Shield className="h-4 w-4" />
+                      <span>Platform Admin</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
