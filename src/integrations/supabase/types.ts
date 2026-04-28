@@ -55,6 +55,7 @@ export type Database = {
           created_at: string
           expiry_date: string | null
           id: string
+          image_url: string | null
           is_controlled: boolean
           name: string
           reorder_level: number
@@ -73,6 +74,7 @@ export type Database = {
           created_at?: string
           expiry_date?: string | null
           id?: string
+          image_url?: string | null
           is_controlled?: boolean
           name: string
           reorder_level?: number
@@ -91,6 +93,7 @@ export type Database = {
           created_at?: string
           expiry_date?: string | null
           id?: string
+          image_url?: string | null
           is_controlled?: boolean
           name?: string
           reorder_level?: number
