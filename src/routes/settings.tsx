@@ -12,6 +12,9 @@ import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
+import type { Database } from "@/integrations/supabase/types";
+
+type AppRole = Database["public"]["Enums"]["app_role"];
 
 export const Route = createFileRoute("/settings")({
   component: () => <ProtectedLayout><SettingsPage /></ProtectedLayout>,
@@ -47,7 +50,7 @@ function SettingsPage() {
   };
 
   const updateRole = async (id: string, role: string) => {
-    const { error } = await supabase.from("memberships").update({ role: role as Member["role"] }).eq("id", id);
+    const { error } = await supabase.from("memberships").update({ role: role as AppRole }).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Role updated");
     void load();
