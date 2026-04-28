@@ -75,14 +75,14 @@ function InventoryPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
           <p className="text-muted-foreground">Track stock, batches, and expiry dates.</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-[var(--gradient-primary)] shadow-[var(--shadow-glow)]"><Plus className="mr-2 h-4 w-4" />Add product</Button>
+            <Button className="w-full sm:w-auto bg-[var(--gradient-primary)] shadow-[var(--shadow-glow)]"><Plus className="mr-2 h-4 w-4" />Add product</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader><DialogTitle>Add product</DialogTitle></DialogHeader>
