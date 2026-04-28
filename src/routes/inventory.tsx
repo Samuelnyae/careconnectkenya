@@ -82,7 +82,7 @@ function InventoryPage() {
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full sm:w-auto bg-[var(--gradient-primary)] shadow-[var(--shadow-glow)]"><Plus className="mr-2 h-4 w-4" />Add product</Button>
+            <Button className="w-full sm:w-auto bg-[#0a3d2e] text-white hover:bg-[#0a3d2e]/90 shadow-[var(--shadow-glow)]"><Plus className="mr-2 h-4 w-4" />Add product</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader><DialogTitle>Add product</DialogTitle></DialogHeader>
