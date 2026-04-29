@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PosRouteImport } from './routes/pos'
+import { Route as PatientsRouteImport } from './routes/patients'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -25,6 +26,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const PosRoute = PosRouteImport.update({
   id: '/pos',
   path: '/pos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PatientsRoute = PatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InventoryRoute = InventoryRouteImport.update({
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/inventory': typeof InventoryRoute
+  '/patients': typeof PatientsRoute
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/inventory': typeof InventoryRoute
+  '/patients': typeof PatientsRoute
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/inventory': typeof InventoryRoute
+  '/patients': typeof PatientsRoute
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/inventory'
+    | '/patients'
     | '/pos'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/inventory'
+    | '/patients'
     | '/pos'
     | '/settings'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/inventory'
+    | '/patients'
     | '/pos'
     | '/settings'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
   InventoryRoute: typeof InventoryRoute
+  PatientsRoute: typeof PatientsRoute
   PosRoute: typeof PosRoute
   SettingsRoute: typeof SettingsRoute
 }
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/pos'
       fullPath: '/pos'
       preLoaderRoute: typeof PosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/patients': {
+      id: '/patients'
+      path: '/patients'
+      fullPath: '/patients'
+      preLoaderRoute: typeof PatientsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
   InventoryRoute: InventoryRoute,
+  PatientsRoute: PatientsRoute,
   PosRoute: PosRoute,
   SettingsRoute: SettingsRoute,
 }
