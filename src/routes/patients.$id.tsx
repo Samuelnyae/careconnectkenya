@@ -19,7 +19,7 @@ export const Route = createFileRoute("/patients/$id")({
 
 type Patient = {
   id: string; full_name: string; date_of_birth: string | null; gender: string | null;
-  phone: string | null; email: string | null; nhif_number: string | null;
+  phone: string | null; email: string | null; sha_number: string | null;
   national_id: string | null; address: string | null;
   allergies: string | null; chronic_conditions: string | null; notes: string | null;
 };
@@ -113,7 +113,7 @@ function PatientDetail() {
             <Row label="Gender" value={patient.gender} />
             <Row label="Phone" value={patient.phone} />
             <Row label="Email" value={patient.email} />
-            <Row label="NHIF" value={patient.nhif_number} />
+            <Row label="SHA" value={patient.sha_number} />
             <Row label="National ID" value={patient.national_id} />
             <Row label="Address" value={patient.address} />
             <div className="pt-2">

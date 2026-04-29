@@ -20,7 +20,7 @@ export const Route = createFileRoute("/patients")({
 
 type Patient = {
   id: string; full_name: string; date_of_birth: string | null; gender: string | null;
-  phone: string | null; nhif_number: string | null; allergies: string | null; chronic_conditions: string | null;
+  phone: string | null; sha_number: string | null; allergies: string | null; chronic_conditions: string | null;
 };
 
 function PatientsPage() {
@@ -28,12 +28,12 @@ function PatientsPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", nhif_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
+  const [form, setForm] = useState({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", sha_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     if (!currentTenantId) return;
-    const { data } = await supabase.from("patients").select("id, full_name, date_of_birth, gender, phone, nhif_number, allergies, chronic_conditions").eq("tenant_id", currentTenantId).order("full_name");
+    const { data } = await supabase.from("patients").select("id, full_name, date_of_birth, gender, phone, sha_number, allergies, chronic_conditions").eq("tenant_id", currentTenantId).order("full_name");
     setPatients((data ?? []) as Patient[]);
   }, [currentTenantId]);
   useEffect(() => { void load(); }, [load]);
@@ -41,7 +41,7 @@ function PatientsPage() {
   const filtered = patients.filter((p) => {
     const s = q.toLowerCase().trim();
     if (!s) return true;
-    return p.full_name.toLowerCase().includes(s) || (p.phone ?? "").includes(s) || (p.nhif_number ?? "").toLowerCase().includes(s);
+    return p.full_name.toLowerCase().includes(s) || (p.phone ?? "").includes(s) || (p.sha_number ?? "").toLowerCase().includes(s);
   });
 
   const save = async () => {
@@ -56,7 +56,7 @@ function PatientsPage() {
       phone: form.phone || null,
       email: form.email || null,
       national_id: form.national_id || null,
-      nhif_number: form.nhif_number || null,
+      sha_number: form.sha_number || null,
       address: form.address || null,
       allergies: form.allergies || null,
       chronic_conditions: form.chronic_conditions || null,
@@ -65,7 +65,7 @@ function PatientsPage() {
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success("Patient added");
-    setForm({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", nhif_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
+    setForm({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", sha_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
     setOpen(false);
     void load();
   };
@@ -100,7 +100,7 @@ function PatientsPage() {
               <div><Label>Phone</Label><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
               <div><Label>Email</Label><Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
               <div><Label>National ID</Label><Input value={form.national_id} onChange={(e) => setForm({ ...form, national_id: e.target.value })} /></div>
-              <div><Label>NHIF number</Label><Input value={form.nhif_number} onChange={(e) => setForm({ ...form, nhif_number: e.target.value })} /></div>
+              <div><Label>SHA number</Label><Input value={form.sha_number} onChange={(e) => setForm({ ...form, sha_number: e.target.value })} /></div>
               <div className="sm:col-span-2"><Label>Address</Label><Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></div>
               <div className="sm:col-span-2"><Label>Allergies</Label><Textarea rows={2} value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} placeholder="e.g. penicillin, sulfa" /></div>
               <div className="sm:col-span-2"><Label>Chronic conditions</Label><Textarea rows={2} value={form.chronic_conditions} onChange={(e) => setForm({ ...form, chronic_conditions: e.target.value })} placeholder="e.g. hypertension, diabetes" /></div>
@@ -115,7 +115,7 @@ function PatientsPage() {
         <CardHeader>
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name, phone, NHIF…" className="pl-9" />
+            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name, phone, SHA…" className="pl-9" />
           </div>
         </CardHeader>
         <CardContent>
@@ -126,7 +126,7 @@ function PatientsPage() {
                 <TableHead>DOB</TableHead>
                 <TableHead>Gender</TableHead>
                 <TableHead>Phone</TableHead>
-                <TableHead>NHIF</TableHead>
+                <TableHead>SHA</TableHead>
                 <TableHead>Allergies</TableHead>
                 <TableHead></TableHead>
               </TableRow>
@@ -138,7 +138,7 @@ function PatientsPage() {
                   <TableCell>{p.date_of_birth ?? "—"}</TableCell>
                   <TableCell className="capitalize">{p.gender ?? "—"}</TableCell>
                   <TableCell>{p.phone ?? "—"}</TableCell>
-                  <TableCell>{p.nhif_number ?? "—"}</TableCell>
+                  <TableCell>{p.sha_number ?? "—"}</TableCell>
                   <TableCell className="max-w-xs truncate text-sm text-muted-foreground">{p.allergies ?? "—"}</TableCell>
                   <TableCell><Button asChild size="sm" variant="outline"><Link to="/patients/$id" params={{ id: p.id }}>Open</Link></Button></TableCell>
                 </TableRow>

@@ -109,9 +109,9 @@ export type Database = {
           gender: string | null
           id: string
           national_id: string | null
-          nhif_number: string | null
           notes: string | null
           phone: string | null
+          sha_number: string | null
           tenant_id: string
           updated_at: string
         }
@@ -127,9 +127,9 @@ export type Database = {
           gender?: string | null
           id?: string
           national_id?: string | null
-          nhif_number?: string | null
           notes?: string | null
           phone?: string | null
+          sha_number?: string | null
           tenant_id: string
           updated_at?: string
         }
@@ -145,9 +145,9 @@ export type Database = {
           gender?: string | null
           id?: string
           national_id?: string | null
-          nhif_number?: string | null
           notes?: string | null
           phone?: string | null
+          sha_number?: string | null
           tenant_id?: string
           updated_at?: string
         }
@@ -395,6 +395,91 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sha_claims: {
+        Row: {
+          amount_approved: number | null
+          amount_claimed: number
+          claim_number: string | null
+          created_at: string
+          created_by: string | null
+          diagnosis: string | null
+          id: string
+          notes: string | null
+          patient_id: string
+          rejection_reason: string | null
+          response_date: string | null
+          sale_id: string | null
+          services_rendered: string | null
+          status: string
+          submission_date: string | null
+          tenant_id: string
+          updated_at: string
+          visit_id: string | null
+        }
+        Insert: {
+          amount_approved?: number | null
+          amount_claimed?: number
+          claim_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          patient_id: string
+          rejection_reason?: string | null
+          response_date?: string | null
+          sale_id?: string | null
+          services_rendered?: string | null
+          status?: string
+          submission_date?: string | null
+          tenant_id: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Update: {
+          amount_approved?: number | null
+          amount_claimed?: number
+          claim_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          rejection_reason?: string | null
+          response_date?: string | null
+          sale_id?: string | null
+          services_rendered?: string | null
+          status?: string
+          submission_date?: string | null
+          tenant_id?: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sha_claims_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sha_claims_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sha_claims_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "patient_visits"
             referencedColumns: ["id"]
           },
         ]
