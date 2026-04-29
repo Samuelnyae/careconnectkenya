@@ -109,8 +109,14 @@ function ClaimsPage() {
     void load();
   };
 
-  const updateStatus = async (id: string, status: ClaimStatus, extra: Record<string, unknown> = {}) => {
-    const patch: Record<string, unknown> = { status, ...extra };
+  const updateStatus = async (id: string, status: ClaimStatus, extra: { amount_approved?: number; rejection_reason?: string } = {}) => {
+    const patch: {
+      status: ClaimStatus;
+      submission_date?: string;
+      response_date?: string;
+      amount_approved?: number;
+      rejection_reason?: string;
+    } = { status, ...extra };
     if (status === "submitted") patch.submission_date = new Date().toISOString();
     if (status === "approved" || status === "rejected" || status === "paid") patch.response_date = new Date().toISOString();
     const { error } = await supabase.from("sha_claims").update(patch).eq("id", id);
