@@ -1,1 +1,10 @@
 project_id = "slqtoxxvmazrjshekspn"
+
+[functions.drug-interactions]
+verify_jwt = true
+
+[functions.mpesa-stk-push]
+verify_jwt = true
+
+[functions.mpesa-callback]
+verify_jwt = false
