@@ -46,6 +46,113 @@ export type Database = {
           },
         ]
       }
+      patient_visits: {
+        Row: {
+          attended_by: string | null
+          created_at: string
+          diagnosis: string | null
+          id: string
+          notes: string | null
+          patient_id: string
+          reason: string | null
+          tenant_id: string
+          updated_at: string
+          visit_date: string
+          vitals: Json | null
+        }
+        Insert: {
+          attended_by?: string | null
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          patient_id: string
+          reason?: string | null
+          tenant_id: string
+          updated_at?: string
+          visit_date?: string
+          vitals?: Json | null
+        }
+        Update: {
+          attended_by?: string | null
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          reason?: string | null
+          tenant_id?: string
+          updated_at?: string
+          visit_date?: string
+          vitals?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_visits_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          address: string | null
+          allergies: string | null
+          chronic_conditions: string | null
+          created_at: string
+          created_by: string | null
+          date_of_birth: string | null
+          email: string | null
+          full_name: string
+          gender: string | null
+          id: string
+          national_id: string | null
+          nhif_number: string | null
+          notes: string | null
+          phone: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          allergies?: string | null
+          chronic_conditions?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          full_name: string
+          gender?: string | null
+          id?: string
+          national_id?: string | null
+          nhif_number?: string | null
+          notes?: string | null
+          phone?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          allergies?: string | null
+          chronic_conditions?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          full_name?: string
+          gender?: string | null
+          id?: string
+          national_id?: string | null
+          nhif_number?: string | null
+          notes?: string | null
+          phone?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       platform_admins: {
         Row: {
           created_at: string
@@ -60,6 +167,73 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      prescriptions: {
+        Row: {
+          created_at: string
+          dosage: string | null
+          drug_name: string
+          duration: string | null
+          frequency: string | null
+          id: string
+          instructions: string | null
+          patient_id: string
+          prescribed_by: string | null
+          product_id: string | null
+          tenant_id: string
+          visit_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          dosage?: string | null
+          drug_name: string
+          duration?: string | null
+          frequency?: string | null
+          id?: string
+          instructions?: string | null
+          patient_id: string
+          prescribed_by?: string | null
+          product_id?: string | null
+          tenant_id: string
+          visit_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          dosage?: string | null
+          drug_name?: string
+          duration?: string | null
+          frequency?: string | null
+          id?: string
+          instructions?: string | null
+          patient_id?: string
+          prescribed_by?: string | null
+          product_id?: string | null
+          tenant_id?: string
+          visit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prescriptions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prescriptions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prescriptions_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "patient_visits"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
@@ -181,6 +355,7 @@ export type Database = {
           customer_name: string | null
           customer_phone: string | null
           id: string
+          patient_id: string | null
           payment_method: string
           tenant_id: string
           total: number
@@ -191,6 +366,7 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           id?: string
+          patient_id?: string | null
           payment_method?: string
           tenant_id: string
           total?: number
@@ -201,11 +377,19 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           id?: string
+          patient_id?: string | null
           payment_method?: string
           tenant_id?: string
           total?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "sales_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sales_tenant_id_fkey"
             columns: ["tenant_id"]
