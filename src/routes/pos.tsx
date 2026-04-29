@@ -22,6 +22,7 @@ function POSPage() {
   const [cart, setCart] = useState<CartLine[]>([]);
   const [q, setQ] = useState("");
   const [customer, setCustomer] = useState("");
+  const [phone, setPhone] = useState("");
   const [paying, setPaying] = useState(false);
 
   const load = useCallback(async () => {
@@ -64,9 +65,21 @@ function POSPage() {
   const checkout = async (method: "cash" | "mpesa" | "card") => {
     if (!currentTenantId || !user || cart.length === 0) return;
     setPaying(true);
+    if (method === "mpesa") {
+      if (!phone.trim()) { setPaying(false); return toast.error("Enter customer phone for M-Pesa"); }
+      const { data: stk, error: stkErr } = await supabase.functions.invoke("mpesa-stk-push", {
+        body: { phone: phone.trim(), amount: total, reference: "POS", description: "Pharmacy sale" },
+      });
+      if (stkErr || stk?.error) {
+        setPaying(false);
+        return toast.error(stk?.error || stkErr?.message || "M-Pesa request failed");
+      }
+      toast.success("STK push sent — ask customer to enter PIN on phone");
+    }
     const { data: sale, error } = await supabase.from("sales").insert({
       tenant_id: currentTenantId, cashier_id: user.id, total, payment_method: method,
       customer_name: customer || null,
+      customer_phone: phone || null,
     }).select().single();
     if (error || !sale) { setPaying(false); return toast.error(error?.message ?? "Sale failed"); }
     const items = cart.map((l) => ({
@@ -77,7 +90,7 @@ function POSPage() {
     setPaying(false);
     if (iErr) return toast.error(iErr.message);
     toast.success(`Sale complete — KSh ${total.toLocaleString()}`);
-    setCart([]); setCustomer("");
+    setCart([]); setCustomer(""); setPhone("");
     void load();
   };
 
@@ -129,6 +142,7 @@ function POSPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <Input placeholder="Customer name (optional)" value={customer} onChange={(e) => setCustomer(e.target.value)} />
+          <Input placeholder="Customer phone (for M-Pesa, e.g. 0712345678)" value={phone} onChange={(e) => setPhone(e.target.value)} />
           <div className="space-y-2 max-h-80 overflow-auto">
             {cart.length === 0 && <div className="py-8 text-center text-sm text-muted-foreground">Cart is empty</div>}
             {cart.map((l) => (
