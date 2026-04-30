@@ -1,4 +1,5 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -72,6 +73,9 @@ function AuthPage() {
                 <Button className="w-full" disabled={busy} onClick={() => void signUp()}>{busy ? "…" : "Create account"}</Button>
               </TabsContent>
             </Tabs>
+            <div className="mt-4 text-center">
+              <Link to="/auth/phone" className="text-sm text-primary hover:underline">Sign in with phone instead →</Link>
+            </div>
           </CardContent>
         </Card>
       </div>
