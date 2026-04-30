@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          doctor_id: string | null
+          duration_minutes: number
+          ended_at: string | null
+          id: string
+          notes: string | null
+          patient_id: string
+          reason: string | null
+          scheduled_at: string
+          started_at: string | null
+          status: string
+          tenant_id: string
+          type: string
+          updated_at: string
+          video_provider: string | null
+          video_room_name: string | null
+          video_room_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          doctor_id?: string | null
+          duration_minutes?: number
+          ended_at?: string | null
+          id?: string
+          notes?: string | null
+          patient_id: string
+          reason?: string | null
+          scheduled_at: string
+          started_at?: string | null
+          status?: string
+          tenant_id: string
+          type?: string
+          updated_at?: string
+          video_provider?: string | null
+          video_room_name?: string | null
+          video_room_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          doctor_id?: string | null
+          duration_minutes?: number
+          ended_at?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          reason?: string | null
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+          tenant_id?: string
+          type?: string
+          updated_at?: string
+          video_provider?: string | null
+          video_room_name?: string | null
+          video_room_url?: string | null
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           created_at: string
@@ -100,6 +163,7 @@ export type Database = {
         Row: {
           address: string | null
           allergies: string | null
+          auth_user_id: string | null
           chronic_conditions: string | null
           created_at: string
           created_by: string | null
@@ -111,6 +175,7 @@ export type Database = {
           national_id: string | null
           notes: string | null
           phone: string | null
+          registered_via: string | null
           sha_number: string | null
           tenant_id: string
           updated_at: string
@@ -118,6 +183,7 @@ export type Database = {
         Insert: {
           address?: string | null
           allergies?: string | null
+          auth_user_id?: string | null
           chronic_conditions?: string | null
           created_at?: string
           created_by?: string | null
@@ -129,6 +195,7 @@ export type Database = {
           national_id?: string | null
           notes?: string | null
           phone?: string | null
+          registered_via?: string | null
           sha_number?: string | null
           tenant_id: string
           updated_at?: string
@@ -136,6 +203,7 @@ export type Database = {
         Update: {
           address?: string | null
           allergies?: string | null
+          auth_user_id?: string | null
           chronic_conditions?: string | null
           created_at?: string
           created_by?: string | null
@@ -147,6 +215,7 @@ export type Database = {
           national_id?: string | null
           notes?: string | null
           phone?: string | null
+          registered_via?: string | null
           sha_number?: string | null
           tenant_id?: string
           updated_at?: string
@@ -168,8 +237,57 @@ export type Database = {
         }
         Relationships: []
       }
+      prescription_deliveries: {
+        Row: {
+          channel: string
+          created_at: string
+          created_by: string | null
+          destination: string | null
+          error_message: string | null
+          id: string
+          patient_id: string
+          prescription_id: string
+          sent_at: string | null
+          share_expires_at: string | null
+          share_token: string | null
+          status: string
+          tenant_id: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          created_by?: string | null
+          destination?: string | null
+          error_message?: string | null
+          id?: string
+          patient_id: string
+          prescription_id: string
+          sent_at?: string | null
+          share_expires_at?: string | null
+          share_token?: string | null
+          status?: string
+          tenant_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          destination?: string | null
+          error_message?: string | null
+          id?: string
+          patient_id?: string
+          prescription_id?: string
+          sent_at?: string | null
+          share_expires_at?: string | null
+          share_token?: string | null
+          status?: string
+          tenant_id?: string
+        }
+        Relationships: []
+      }
       prescriptions: {
         Row: {
+          appointment_id: string | null
           created_at: string
           dosage: string | null
           drug_name: string
@@ -184,6 +302,7 @@ export type Database = {
           visit_id: string | null
         }
         Insert: {
+          appointment_id?: string | null
           created_at?: string
           dosage?: string | null
           drug_name: string
@@ -198,6 +317,7 @@ export type Database = {
           visit_id?: string | null
         }
         Update: {
+          appointment_id?: string | null
           created_at?: string
           dosage?: string | null
           drug_name?: string
