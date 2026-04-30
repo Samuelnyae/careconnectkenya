@@ -19,7 +19,9 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RxTokenRouteImport } from './routes/rx.$token'
 import { Route as PatientsIdRouteImport } from './routes/patients.$id'
+import { Route as ConsultIdRouteImport } from './routes/consult.$id'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -71,10 +73,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RxTokenRoute = RxTokenRouteImport.update({
+  id: '/rx/$token',
+  path: '/rx/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PatientsIdRoute = PatientsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => PatientsRoute,
+} as any)
+const ConsultIdRoute = ConsultIdRouteImport.update({
+  id: '/consult/$id',
+  path: '/consult/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -88,7 +100,9 @@ export interface FileRoutesByFullPath {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
+  '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
+  '/rx/$token': typeof RxTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -101,7 +115,9 @@ export interface FileRoutesByTo {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
+  '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
+  '/rx/$token': typeof RxTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -115,7 +131,9 @@ export interface FileRoutesById {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
+  '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
+  '/rx/$token': typeof RxTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -130,7 +148,9 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/settings'
+    | '/consult/$id'
     | '/patients/$id'
+    | '/rx/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -143,7 +163,9 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/settings'
+    | '/consult/$id'
     | '/patients/$id'
+    | '/rx/$token'
   id:
     | '__root__'
     | '/'
@@ -156,7 +178,9 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/settings'
+    | '/consult/$id'
     | '/patients/$id'
+    | '/rx/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -170,6 +194,8 @@ export interface RootRouteChildren {
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
   SettingsRoute: typeof SettingsRoute
+  ConsultIdRoute: typeof ConsultIdRoute
+  RxTokenRoute: typeof RxTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -244,12 +270,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rx/$token': {
+      id: '/rx/$token'
+      path: '/rx/$token'
+      fullPath: '/rx/$token'
+      preLoaderRoute: typeof RxTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/patients/$id': {
       id: '/patients/$id'
       path: '/$id'
       fullPath: '/patients/$id'
       preLoaderRoute: typeof PatientsIdRouteImport
       parentRoute: typeof PatientsRoute
+    }
+    '/consult/$id': {
+      id: '/consult/$id'
+      path: '/consult/$id'
+      fullPath: '/consult/$id'
+      preLoaderRoute: typeof ConsultIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -277,6 +317,8 @@ const rootRouteChildren: RootRouteChildren = {
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
   SettingsRoute: SettingsRoute,
+  ConsultIdRoute: ConsultIdRoute,
+  RxTokenRoute: RxTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
