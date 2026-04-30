@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, ShoppingCart, Package, LogOut, Building2, Settings, Shield, Users, FileText } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, LogOut, Building2, Settings, Shield, Users, FileText, Video } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -22,6 +22,7 @@ const items = [
   { title: "Pharmacy POS", url: "/pos", icon: ShoppingCart },
   { title: "Inventory", url: "/inventory", icon: Package },
   { title: "Patients", url: "/patients", icon: Users },
+  { title: "Telemedicine", url: "/appointments", icon: Video },
   { title: "SHA Claims", url: "/claims", icon: FileText },
   { title: "Settings", url: "/settings", icon: Settings },
 ];

@@ -8,3 +8,18 @@ verify_jwt = true
 
 [functions.mpesa-callback]
 verify_jwt = false
+
+[functions.create-video-room]
+verify_jwt = true
+
+[functions.send-prescription]
+verify_jwt = true
+
+[functions.send-otp]
+verify_jwt = false
+
+[functions.verify-otp]
+verify_jwt = false
+
+[functions.public-prescription]
+verify_jwt = false
