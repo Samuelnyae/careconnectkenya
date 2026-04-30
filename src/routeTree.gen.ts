@@ -22,6 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as RxTokenRouteImport } from './routes/rx.$token'
 import { Route as PatientsIdRouteImport } from './routes/patients.$id'
 import { Route as ConsultIdRouteImport } from './routes/consult.$id'
+import { Route as AuthPhoneRouteImport } from './routes/auth.phone'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -88,18 +89,24 @@ const ConsultIdRoute = ConsultIdRouteImport.update({
   path: '/consult/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthPhoneRoute = AuthPhoneRouteImport.update({
+  id: '/phone',
+  path: '/phone',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
+  '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
@@ -108,13 +115,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
+  '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
@@ -124,13 +132,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
+  '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/settings'
+    | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/settings'
+    | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/settings'
+    | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
@@ -187,7 +199,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AppointmentsRoute: typeof AppointmentsRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   ClaimsRoute: typeof ClaimsRoute
   DashboardRoute: typeof DashboardRoute
   InventoryRoute: typeof InventoryRoute
@@ -291,8 +303,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsultIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/phone': {
+      id: '/auth/phone'
+      path: '/phone'
+      fullPath: '/auth/phone'
+      preLoaderRoute: typeof AuthPhoneRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
+
+interface AuthRouteChildren {
+  AuthPhoneRoute: typeof AuthPhoneRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthPhoneRoute: AuthPhoneRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface PatientsRouteChildren {
   PatientsIdRoute: typeof PatientsIdRoute
@@ -310,7 +339,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AppointmentsRoute: AppointmentsRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   ClaimsRoute: ClaimsRoute,
   DashboardRoute: DashboardRoute,
   InventoryRoute: InventoryRoute,
