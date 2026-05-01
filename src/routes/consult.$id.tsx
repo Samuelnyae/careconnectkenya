@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Video, Pill, Send, Loader2, ExternalLink, Phone, MessageSquare, FileText } from "lucide-react";
+import { ArrowLeft, Video, Pill, Send, Loader2, ExternalLink, Phone, MessageSquare, FileText, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/consult/$id")({
@@ -102,13 +102,16 @@ function ConsultRoom() {
     });
     setSendingId(null);
     if (error || data?.error) return toast.error(error?.message ?? data?.error);
-    type SendResult = { channel: string; status: string; share_url?: string; error?: string };
+    type SendResult = { channel: string; status: string; share_url?: string; deep_link?: string; error?: string };
     const results = (data?.results ?? []) as SendResult[];
     for (const r of results) {
       if (r.status === "sent") toast.success(`${r.channel.toUpperCase()} delivered`);
+      else if (r.status === "link_ready") toast.success(`${r.channel.toUpperCase()} link ready`);
       else if (r.status === "pending_provider") toast.warning(`${r.channel.toUpperCase()}: ${r.error ?? "provider not configured"}`);
       else if (r.status === "failed") toast.error(`${r.channel.toUpperCase()} failed: ${r.error}`);
     }
+    const linkRes = results.find((r) => r.deep_link);
+    if (linkRes?.deep_link) window.open(linkRes.deep_link, "_blank");
     if (channels.includes("inapp") || channels.includes("pdf")) {
       const inapp = results.find((r) => r.channel === "inapp");
       if (inapp?.share_url) window.open(inapp.share_url, "_blank");
