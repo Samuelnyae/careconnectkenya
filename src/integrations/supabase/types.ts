@@ -75,7 +75,15 @@ export type Database = {
           video_room_name?: string | null
           video_room_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "appointments_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       memberships: {
         Row: {
