@@ -44,6 +44,7 @@ Deno.serve(async (req) => {
 
       let status: string = "sent";
       let errorMsg: string | null = null;
+      let deepLink: string | undefined;
 
       if (channel === "sms") {
         const atUser = Deno.env.get("AT_USERNAME");
@@ -62,6 +63,17 @@ Deno.serve(async (req) => {
           });
           if (!r.ok) { status = "failed"; errorMsg = `AT ${r.status}`; }
         }
+      } else if (channel === "whatsapp" || channel === "telegram") {
+        const target = phone ?? patient?.phone ?? null;
+        const msg = `Afya Cloud Rx for ${patient?.full_name ?? "you"}: ${rx.drug_name} ${rx.dosage ?? ""}. Details: ${shareUrl}`;
+        if (channel === "whatsapp") {
+          // wa.me requires digits only, no '+'
+          const digits = target ? target.replace(/[^0-9]/g, "") : "";
+          deepLink = `https://wa.me/${digits}?text=${encodeURIComponent(msg)}`;
+        } else {
+          deepLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(msg)}`;
+        }
+        status = "link_ready";
       }
 
       await admin.from("prescription_deliveries").insert({
@@ -77,7 +89,7 @@ Deno.serve(async (req) => {
         error_message: errorMsg,
         created_by: user?.id ?? null,
       });
-      results.push({ channel, status, share_url: shareUrl, error: errorMsg ?? undefined });
+      results.push({ channel, status, share_url: shareUrl, deep_link: deepLink, error: errorMsg ?? undefined });
     }
 
     return Response.json({ results }, { headers: corsHeaders });
