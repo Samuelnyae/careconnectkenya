@@ -90,7 +90,7 @@ function ConsultRoom() {
     void load();
   };
 
-  const send = async (rxId: string, channels: ("inapp" | "sms" | "pdf")[]) => {
+  const send = async (rxId: string, channels: ("inapp" | "sms" | "pdf" | "whatsapp" | "telegram")[]) => {
     if (!appt) return;
     setSendingId(rxId);
     const { data, error } = await supabase.functions.invoke("send-prescription", {
@@ -208,6 +208,12 @@ function ConsultRoom() {
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => void send(r.id, ["sms"])} disabled={sendingId === r.id || !appt.patients?.phone}>
                           {sendingId === r.id ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Send className="mr-1 h-3 w-3" />}SMS
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => void send(r.id, ["whatsapp"])} disabled={sendingId === r.id || !appt.patients?.phone}>
+                          <MessageCircle className="mr-1 h-3 w-3" />WhatsApp
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => void send(r.id, ["telegram"])} disabled={sendingId === r.id}>
+                          <Send className="mr-1 h-3 w-3" />Telegram
                         </Button>
                       </div>
                     </div>
