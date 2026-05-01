@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Video, Pill, Send, Loader2, ExternalLink, Phone, MessageSquare, FileText } from "lucide-react";
+import { ArrowLeft, Video, Pill, Send, Loader2, ExternalLink, Phone, MessageSquare, FileText, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/consult/$id")({
@@ -90,7 +90,7 @@ function ConsultRoom() {
     void load();
   };
 
-  const send = async (rxId: string, channels: ("inapp" | "sms" | "pdf")[]) => {
+  const send = async (rxId: string, channels: ("inapp" | "sms" | "pdf" | "whatsapp" | "telegram")[]) => {
     if (!appt) return;
     setSendingId(rxId);
     const { data, error } = await supabase.functions.invoke("send-prescription", {
@@ -102,13 +102,16 @@ function ConsultRoom() {
     });
     setSendingId(null);
     if (error || data?.error) return toast.error(error?.message ?? data?.error);
-    type SendResult = { channel: string; status: string; share_url?: string; error?: string };
+    type SendResult = { channel: string; status: string; share_url?: string; deep_link?: string; error?: string };
     const results = (data?.results ?? []) as SendResult[];
     for (const r of results) {
       if (r.status === "sent") toast.success(`${r.channel.toUpperCase()} delivered`);
+      else if (r.status === "link_ready") toast.success(`${r.channel.toUpperCase()} link ready`);
       else if (r.status === "pending_provider") toast.warning(`${r.channel.toUpperCase()}: ${r.error ?? "provider not configured"}`);
       else if (r.status === "failed") toast.error(`${r.channel.toUpperCase()} failed: ${r.error}`);
     }
+    const linkRes = results.find((r) => r.deep_link);
+    if (linkRes?.deep_link) window.open(linkRes.deep_link, "_blank");
     if (channels.includes("inapp") || channels.includes("pdf")) {
       const inapp = results.find((r) => r.channel === "inapp");
       if (inapp?.share_url) window.open(inapp.share_url, "_blank");
@@ -205,6 +208,12 @@ function ConsultRoom() {
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => void send(r.id, ["sms"])} disabled={sendingId === r.id || !appt.patients?.phone}>
                           {sendingId === r.id ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Send className="mr-1 h-3 w-3" />}SMS
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => void send(r.id, ["whatsapp"])} disabled={sendingId === r.id || !appt.patients?.phone}>
+                          <MessageCircle className="mr-1 h-3 w-3" />WhatsApp
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => void send(r.id, ["telegram"])} disabled={sendingId === r.id}>
+                          <Send className="mr-1 h-3 w-3" />Telegram
                         </Button>
                       </div>
                     </div>
