@@ -17,6 +17,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClaimsRouteImport } from './routes/claims'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
+import { Route as AiInsightsRouteImport } from './routes/ai-insights'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RxTokenRouteImport } from './routes/rx.$token'
@@ -64,6 +65,11 @@ const AppointmentsRoute = AppointmentsRouteImport.update({
   path: '/appointments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiInsightsRoute = AiInsightsRouteImport.update({
+  id: '/ai-insights',
+  path: '/ai-insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -98,6 +104,7 @@ const AuthPhoneRoute = AuthPhoneRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/ai-insights'
     | '/appointments'
     | '/auth'
     | '/claims'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/ai-insights'
     | '/appointments'
     | '/auth'
     | '/claims'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/ai-insights'
     | '/appointments'
     | '/auth'
     | '/claims'
@@ -198,6 +210,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
   AuthRoute: typeof AuthRouteWithChildren
   ClaimsRoute: typeof ClaimsRoute
@@ -266,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/appointments'
       fullPath: '/appointments'
       preLoaderRoute: typeof AppointmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-insights': {
+      id: '/ai-insights'
+      path: '/ai-insights'
+      fullPath: '/ai-insights'
+      preLoaderRoute: typeof AiInsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -338,6 +358,7 @@ const PatientsRouteWithChildren = PatientsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
   AuthRoute: AuthRouteWithChildren,
   ClaimsRoute: ClaimsRoute,
