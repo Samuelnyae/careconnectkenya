@@ -23,3 +23,15 @@ verify_jwt = false
 
 [functions.public-prescription]
 verify_jwt = false
+
+[functions.ai-anomaly-rx]
+verify_jwt = true
+
+[functions.ai-outbreak-detect]
+verify_jwt = true
+
+[functions.ai-credit-risk]
+verify_jwt = true
+
+[functions.ai-reorder-forecast]
+verify_jwt = true
