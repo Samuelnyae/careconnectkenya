@@ -76,11 +76,11 @@ function PatientDetail() {
   }, [id]);
   useEffect(() => { void load(); }, [load]);
 
-  const updatePatient = async (patch: Partial<Patient>) => {
+  const updatePatient = async (patch: Record<string, unknown>) => {
     if (!patient) return;
-    const { error } = await supabase.from("patients").update(patch).eq("id", patient.id);
+    const { error } = await supabase.from("patients").update(patch as never).eq("id", patient.id);
     if (error) return toast.error(error.message);
-    setPatient({ ...patient, ...patch });
+    setPatient({ ...patient, ...(patch as Partial<Patient>) });
     toast.success("Updated");
   };
 
