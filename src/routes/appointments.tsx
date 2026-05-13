@@ -52,14 +52,34 @@ function AppointmentsPage() {
     if (!form.patient_id) return toast.error("Pick a patient");
     if (!form.scheduled_at) return toast.error("Pick date & time");
     setSaving(true);
-    const { error } = await supabase.from("appointments").insert({
+    const scheduledIso = new Date(form.scheduled_at).toISOString();
+    const { data: appt, error } = await supabase.from("appointments").insert({
       tenant_id: currentTenantId, patient_id: form.patient_id, doctor_id: user.id,
-      scheduled_at: new Date(form.scheduled_at).toISOString(),
+      scheduled_at: scheduledIso,
       duration_minutes: form.duration_minutes, type: "telemedicine",
       reason: form.reason || null, notes: form.notes || null, created_by: user.id,
-    });
+    }).select("id").single();
     setSaving(false);
     if (error) return toast.error(error.message);
+
+    // Auto-schedule reminders 24h and 1h before
+    const patient = patients.find((p) => p.id === form.patient_id);
+    const apptDate = new Date(scheduledIso);
+    const r24 = new Date(apptDate.getTime() - 24 * 60 * 60 * 1000);
+    const r1 = new Date(apptDate.getTime() - 60 * 60 * 1000);
+    const now = Date.now();
+    const baseMsg = `Reminder: appointment with ${patient?.full_name ? "Dr." : "your doctor"} on ${apptDate.toLocaleString()}${form.reason ? ` (${form.reason})` : ""}.`;
+    const rows = [
+      { when: r24, label: "in 24 hours" },
+      { when: r1, label: "in 1 hour" },
+    ].filter((x) => x.when.getTime() > now).map((x) => ({
+      tenant_id: currentTenantId, patient_id: form.patient_id, created_by: user.id,
+      reminder_type: "appointment", related_id: appt?.id ?? null,
+      message: baseMsg + ` Starts ${x.label}.`,
+      channels: ["sms"], scheduled_at: x.when.toISOString(),
+    }));
+    if (rows.length > 0) await supabase.from("reminders").insert(rows);
+
     toast.success("Appointment scheduled");
     setForm({ patient_id: "", scheduled_at: "", duration_minutes: 30, reason: "", notes: "" });
     setOpen(false);

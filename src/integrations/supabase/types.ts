@@ -85,6 +85,66 @@ export type Database = {
           },
         ]
       }
+      lab_results: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          file_url: string | null
+          id: string
+          notes: string | null
+          ordered_by: string | null
+          patient_id: string
+          performed_at: string
+          reference_range: string | null
+          result_unit: string | null
+          result_value: string | null
+          status: string
+          tenant_id: string
+          test_category: string | null
+          test_name: string
+          updated_at: string
+          visit_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          id?: string
+          notes?: string | null
+          ordered_by?: string | null
+          patient_id: string
+          performed_at?: string
+          reference_range?: string | null
+          result_unit?: string | null
+          result_value?: string | null
+          status?: string
+          tenant_id: string
+          test_category?: string | null
+          test_name: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          id?: string
+          notes?: string | null
+          ordered_by?: string | null
+          patient_id?: string
+          performed_at?: string
+          reference_range?: string | null
+          result_unit?: string | null
+          result_value?: string | null
+          status?: string
+          tenant_id?: string
+          test_category?: string | null
+          test_name?: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           created_at: string
@@ -173,6 +233,7 @@ export type Database = {
           allergies: string | null
           auth_user_id: string | null
           chronic_conditions: string | null
+          chronic_review_date: string | null
           created_at: string
           created_by: string | null
           date_of_birth: string | null
@@ -180,19 +241,24 @@ export type Database = {
           full_name: string
           gender: string | null
           id: string
+          is_chronic: boolean
           national_id: string | null
           notes: string | null
           phone: string | null
+          preferred_channels: string[]
           registered_via: string | null
           sha_number: string | null
+          telegram_chat_id: string | null
           tenant_id: string
           updated_at: string
+          whatsapp_number: string | null
         }
         Insert: {
           address?: string | null
           allergies?: string | null
           auth_user_id?: string | null
           chronic_conditions?: string | null
+          chronic_review_date?: string | null
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
@@ -200,19 +266,24 @@ export type Database = {
           full_name: string
           gender?: string | null
           id?: string
+          is_chronic?: boolean
           national_id?: string | null
           notes?: string | null
           phone?: string | null
+          preferred_channels?: string[]
           registered_via?: string | null
           sha_number?: string | null
+          telegram_chat_id?: string | null
           tenant_id: string
           updated_at?: string
+          whatsapp_number?: string | null
         }
         Update: {
           address?: string | null
           allergies?: string | null
           auth_user_id?: string | null
           chronic_conditions?: string | null
+          chronic_review_date?: string | null
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
@@ -220,13 +291,17 @@ export type Database = {
           full_name?: string
           gender?: string | null
           id?: string
+          is_chronic?: boolean
           national_id?: string | null
           notes?: string | null
           phone?: string | null
+          preferred_channels?: string[]
           registered_via?: string | null
           sha_number?: string | null
+          telegram_chat_id?: string | null
           tenant_id?: string
           updated_at?: string
+          whatsapp_number?: string | null
         }
         Relationships: []
       }
@@ -431,6 +506,60 @@ export type Database = {
           },
         ]
       }
+      reminders: {
+        Row: {
+          channels: string[]
+          created_at: string
+          created_by: string | null
+          delivery_log: Json | null
+          error_message: string | null
+          id: string
+          message: string
+          patient_id: string
+          related_id: string | null
+          reminder_type: string
+          scheduled_at: string
+          sent_at: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          channels?: string[]
+          created_at?: string
+          created_by?: string | null
+          delivery_log?: Json | null
+          error_message?: string | null
+          id?: string
+          message: string
+          patient_id: string
+          related_id?: string | null
+          reminder_type: string
+          scheduled_at: string
+          sent_at?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          channels?: string[]
+          created_at?: string
+          created_by?: string | null
+          delivery_log?: Json | null
+          error_message?: string | null
+          id?: string
+          message?: string
+          patient_id?: string
+          related_id?: string | null
+          reminder_type?: string
+          scheduled_at?: string
+          sent_at?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sale_items: {
         Row: {
           id: string
@@ -611,6 +740,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      telegram_bot_state: {
+        Row: {
+          id: number
+          update_offset: number
+          updated_at: string
+        }
+        Insert: {
+          id: number
+          update_offset?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          update_offset?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       tenants: {
         Row: {

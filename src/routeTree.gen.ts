@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
 import { Route as InventoryRouteImport } from './routes/inventory'
@@ -24,10 +25,16 @@ import { Route as RxTokenRouteImport } from './routes/rx.$token'
 import { Route as PatientsIdRouteImport } from './routes/patients.$id'
 import { Route as ConsultIdRouteImport } from './routes/consult.$id'
 import { Route as AuthPhoneRouteImport } from './routes/auth.phone'
+import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RemindersRoute = RemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PosRoute = PosRouteImport.update({
@@ -100,6 +107,12 @@ const AuthPhoneRoute = AuthPhoneRouteImport.update({
   path: '/phone',
   getParentRoute: () => AuthRoute,
 } as any)
+const ApiPublicHooksSendRemindersRoute =
+  ApiPublicHooksSendRemindersRouteImport.update({
+    id: '/api/public/hooks/send-reminders',
+    path: '/api/public/hooks/send-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -112,11 +125,13 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -129,11 +144,13 @@ export interface FileRoutesByTo {
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -147,11 +164,13 @@ export interface FileRoutesById {
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -166,11 +185,13 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/patients'
     | '/pos'
+    | '/reminders'
     | '/settings'
     | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -183,11 +204,13 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/patients'
     | '/pos'
+    | '/reminders'
     | '/settings'
     | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/api/public/hooks/send-reminders'
   id:
     | '__root__'
     | '/'
@@ -200,11 +223,13 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/patients'
     | '/pos'
+    | '/reminders'
     | '/settings'
     | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -218,9 +243,11 @@ export interface RootRouteChildren {
   InventoryRoute: typeof InventoryRoute
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
+  RemindersRoute: typeof RemindersRoute
   SettingsRoute: typeof SettingsRoute
   ConsultIdRoute: typeof ConsultIdRoute
   RxTokenRoute: typeof RxTokenRoute
+  ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -230,6 +257,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reminders': {
+      id: '/reminders'
+      path: '/reminders'
+      fullPath: '/reminders'
+      preLoaderRoute: typeof RemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pos': {
@@ -330,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthPhoneRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/api/public/hooks/send-reminders': {
+      id: '/api/public/hooks/send-reminders'
+      path: '/api/public/hooks/send-reminders'
+      fullPath: '/api/public/hooks/send-reminders'
+      preLoaderRoute: typeof ApiPublicHooksSendRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -366,19 +407,12 @@ const rootRouteChildren: RootRouteChildren = {
   InventoryRoute: InventoryRoute,
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
+  RemindersRoute: RemindersRoute,
   SettingsRoute: SettingsRoute,
   ConsultIdRoute: ConsultIdRoute,
   RxTokenRoute: RxTokenRoute,
+  ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
