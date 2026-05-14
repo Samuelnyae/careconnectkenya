@@ -13,6 +13,8 @@ import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Search, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { enqueue, cacheList, readCache } from "@/lib/offline/db";
+import { KENYA_COUNTIES } from "@/lib/kenya-counties";
 
 export const Route = createFileRoute("/patients")({
   component: () => <ProtectedLayout><PatientsPage /></ProtectedLayout>,
@@ -29,12 +31,22 @@ function PatientsPage() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", sha_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
+  const [county, setCounty] = useState<string>("");
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     if (!currentTenantId) return;
-    const { data } = await supabase.from("patients").select("id, full_name, date_of_birth, gender, phone, sha_number, allergies, chronic_conditions").eq("tenant_id", currentTenantId).order("full_name");
-    setPatients((data ?? []) as Patient[]);
+    const { data, error } = await supabase
+      .from("patients")
+      .select("id, full_name, date_of_birth, gender, phone, sha_number, allergies, chronic_conditions")
+      .eq("tenant_id", currentTenantId).order("full_name");
+    if (!error && data) {
+      setPatients(data as Patient[]);
+      void cacheList("cache_patients", currentTenantId, data);
+    } else {
+      const cached = await readCache("cache_patients", currentTenantId);
+      if (cached) setPatients(cached as Patient[]);
+    }
   }, [currentTenantId]);
   useEffect(() => { void load(); }, [load]);
 
@@ -47,7 +59,7 @@ function PatientsPage() {
   const save = async () => {
     if (!currentTenantId || !user || !form.full_name.trim()) return toast.error("Name required");
     setSaving(true);
-    const { error } = await supabase.from("patients").insert({
+    const payload = {
       tenant_id: currentTenantId,
       created_by: user.id,
       full_name: form.full_name.trim(),
@@ -58,14 +70,27 @@ function PatientsPage() {
       national_id: form.national_id || null,
       sha_number: form.sha_number || null,
       address: form.address || null,
+      county: county || null,
       allergies: form.allergies || null,
       chronic_conditions: form.chronic_conditions || null,
       notes: form.notes || null,
-    });
+    };
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      try {
+        await enqueue({ tenant_id: currentTenantId, table: "patients", payload });
+        toast.success("Patient queued offline — will sync when online");
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Queue failed");
+        setSaving(false); return;
+      }
+    } else {
+      const { error } = await supabase.from("patients").insert(payload);
+      if (error) { setSaving(false); return toast.error(error.message); }
+      toast.success("Patient added");
+    }
     setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success("Patient added");
     setForm({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", sha_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
+    setCounty("");
     setOpen(false);
     void load();
   };
