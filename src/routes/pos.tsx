@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Plus, Minus, Trash2, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
+import { enqueue, cacheList, readCache } from "@/lib/offline/db";
 
 export const Route = createFileRoute("/pos")({
   component: () => <ProtectedLayout><POSPage /></ProtectedLayout>,
@@ -27,8 +28,18 @@ function POSPage() {
 
   const load = useCallback(async () => {
     if (!currentTenantId) return;
-    const { data } = await supabase.from("products").select("id, name, unit_price, stock_qty, category, image_url").eq("tenant_id", currentTenantId).order("name");
-    setProducts((data ?? []) as Product[]);
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, name, unit_price, stock_qty, category, image_url")
+      .eq("tenant_id", currentTenantId).order("name");
+    if (!error && data) {
+      setProducts(data as Product[]);
+      void cacheList("cache_products", currentTenantId, data);
+    } else {
+      // Offline fallback
+      const cached = await readCache("cache_products", currentTenantId);
+      if (cached) setProducts(cached as Product[]);
+    }
   }, [currentTenantId]);
   useEffect(() => { void load(); }, [load]);
 
