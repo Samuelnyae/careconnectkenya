@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useAuth } from "@/lib/auth-context";
 import { OnboardingGate } from "@/components/onboarding-gate";
+import { OfflineIndicator } from "@/components/offline-indicator";
 
 export function ProtectedLayout({ children }: { children: ReactNode }) {
   const { user, loading, memberships, currentTenantId } = useAuth();
@@ -22,6 +23,7 @@ export function ProtectedLayout({ children }: { children: ReactNode }) {
           <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-card/80 px-4 backdrop-blur">
             <SidebarTrigger />
             <div className="text-sm font-medium text-muted-foreground">Afya Cloud</div>
+            <div className="ml-auto"><OfflineIndicator /></div>
           </header>
           <main className="flex-1 p-6">{children}</main>
         </div>
