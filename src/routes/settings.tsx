@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
+import { KENYA_COUNTIES } from "@/lib/kenya-counties";
 
 type AppRole = Database["public"]["Enums"]["app_role"];
 
@@ -27,6 +28,7 @@ function SettingsPage() {
   const { currentTenantId, currentTenant, currentRole, user } = useAuth();
   const [members, setMembers] = useState<Member[]>([]);
   const [name, setName] = useState("");
+  const [county, setCounty] = useState<string>("");
   const [saving, setSaving] = useState(false);
 
   const canManage = currentRole === "owner" || currentRole === "admin";
@@ -38,15 +40,22 @@ function SettingsPage() {
   }, [currentTenantId]);
 
   useEffect(() => { void load(); }, [load]);
-  useEffect(() => { setName(currentTenant?.name ?? ""); }, [currentTenant]);
+  useEffect(() => {
+    setName(currentTenant?.name ?? "");
+    const c = (currentTenant as unknown as { county?: string } | null)?.county ?? "";
+    setCounty(c);
+  }, [currentTenant]);
 
   const saveName = async () => {
     if (!currentTenantId || !name.trim()) return;
     setSaving(true);
-    const { error } = await supabase.from("tenants").update({ name: name.trim() }).eq("id", currentTenantId);
+    const { error } = await supabase
+      .from("tenants")
+      .update({ name: name.trim(), county: county || null })
+      .eq("id", currentTenantId);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Organization name updated");
+    toast.success("Organization updated");
   };
 
   const updateRole = async (id: string, role: string) => {
@@ -77,6 +86,16 @@ function SettingsPage() {
           <div className="grid gap-2 max-w-md">
             <Label>Name</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} disabled={!canManage} />
+          </div>
+          <div className="grid gap-2 max-w-md">
+            <Label>County</Label>
+            <Select value={county} onValueChange={setCounty} disabled={!canManage}>
+              <SelectTrigger><SelectValue placeholder="Select Kenyan county" /></SelectTrigger>
+              <SelectContent className="max-h-72">
+                {KENYA_COUNTIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">Used to tag visits and sales for the Disease Trends dashboard.</p>
           </div>
           <div className="text-sm text-muted-foreground">Type: {currentTenant?.type} · Slug: {currentTenant?.slug}</div>
           {canManage && <Button onClick={() => void saveName()} disabled={saving}>Save</Button>}
