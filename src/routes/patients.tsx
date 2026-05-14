@@ -127,6 +127,15 @@ function PatientsPage() {
               <div><Label>National ID</Label><Input value={form.national_id} onChange={(e) => setForm({ ...form, national_id: e.target.value })} /></div>
               <div><Label>SHA number</Label><Input value={form.sha_number} onChange={(e) => setForm({ ...form, sha_number: e.target.value })} /></div>
               <div className="sm:col-span-2"><Label>Address</Label><Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></div>
+              <div className="sm:col-span-2">
+                <Label>County</Label>
+                <Select value={county} onValueChange={setCounty}>
+                  <SelectTrigger><SelectValue placeholder="Select county (used for disease trends)" /></SelectTrigger>
+                  <SelectContent className="max-h-72">
+                    {KENYA_COUNTIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="sm:col-span-2"><Label>Allergies</Label><Textarea rows={2} value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} placeholder="e.g. penicillin, sulfa" /></div>
               <div className="sm:col-span-2"><Label>Chronic conditions</Label><Textarea rows={2} value={form.chronic_conditions} onChange={(e) => setForm({ ...form, chronic_conditions: e.target.value })} placeholder="e.g. hypertension, diabetes" /></div>
               <div className="sm:col-span-2"><Label>Notes</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
