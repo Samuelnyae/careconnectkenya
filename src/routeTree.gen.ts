@@ -14,6 +14,7 @@ import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
 import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as DiseaseTrendsRouteImport } from './routes/disease-trends'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClaimsRouteImport } from './routes/claims'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -50,6 +51,11 @@ const PatientsRoute = PatientsRouteImport.update({
 const InventoryRoute = InventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiseaseTrendsRoute = DiseaseTrendsRouteImport.update({
+  id: '/disease-trends',
+  path: '/disease-trends',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
+  '/disease-trends': typeof DiseaseTrendsRoute
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
+  '/disease-trends': typeof DiseaseTrendsRoute
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
+  '/disease-trends': typeof DiseaseTrendsRoute
   '/inventory': typeof InventoryRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/claims'
     | '/dashboard'
+    | '/disease-trends'
     | '/inventory'
     | '/patients'
     | '/pos'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/claims'
     | '/dashboard'
+    | '/disease-trends'
     | '/inventory'
     | '/patients'
     | '/pos'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/claims'
     | '/dashboard'
+    | '/disease-trends'
     | '/inventory'
     | '/patients'
     | '/pos'
@@ -240,6 +252,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   ClaimsRoute: typeof ClaimsRoute
   DashboardRoute: typeof DashboardRoute
+  DiseaseTrendsRoute: typeof DiseaseTrendsRoute
   InventoryRoute: typeof InventoryRoute
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       path: '/inventory'
       fullPath: '/inventory'
       preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disease-trends': {
+      id: '/disease-trends'
+      path: '/disease-trends'
+      fullPath: '/disease-trends'
+      preLoaderRoute: typeof DiseaseTrendsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -404,6 +424,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   ClaimsRoute: ClaimsRoute,
   DashboardRoute: DashboardRoute,
+  DiseaseTrendsRoute: DiseaseTrendsRoute,
   InventoryRoute: InventoryRoute,
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
@@ -416,12 +437,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

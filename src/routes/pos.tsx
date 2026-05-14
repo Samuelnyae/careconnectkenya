@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Plus, Minus, Trash2, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
+import { enqueue, cacheList, readCache } from "@/lib/offline/db";
 
 export const Route = createFileRoute("/pos")({
   component: () => <ProtectedLayout><POSPage /></ProtectedLayout>,
@@ -27,8 +28,18 @@ function POSPage() {
 
   const load = useCallback(async () => {
     if (!currentTenantId) return;
-    const { data } = await supabase.from("products").select("id, name, unit_price, stock_qty, category, image_url").eq("tenant_id", currentTenantId).order("name");
-    setProducts((data ?? []) as Product[]);
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, name, unit_price, stock_qty, category, image_url")
+      .eq("tenant_id", currentTenantId).order("name");
+    if (!error && data) {
+      setProducts(data as Product[]);
+      void cacheList("cache_products", currentTenantId, data);
+    } else {
+      // Offline fallback
+      const cached = await readCache("cache_products", currentTenantId);
+      if (cached) setProducts(cached as Product[]);
+    }
   }, [currentTenantId]);
   useEffect(() => { void load(); }, [load]);
 
@@ -65,6 +76,39 @@ function POSPage() {
   const checkout = async (method: "cash" | "mpesa" | "card") => {
     if (!currentTenantId || !user || cart.length === 0) return;
     setPaying(true);
+    // Offline path: queue and exit
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      try {
+        await enqueue({
+          tenant_id: currentTenantId,
+          table: "sales",
+          payload: {
+            tenant_id: currentTenantId, cashier_id: user.id, total, payment_method: method,
+            customer_name: customer || null, customer_phone: phone || null,
+          },
+          children: {
+            table: "sale_items",
+            parentKey: "sale_id",
+            rows: cart.map((l) => ({
+              product_id: l.product.id, product_name: l.product.name,
+              quantity: l.qty, unit_price: l.product.unit_price,
+              subtotal: l.qty * Number(l.product.unit_price),
+            })),
+          },
+        });
+        // Optimistic local stock update so cashier can keep selling
+        setProducts((ps) => ps.map((p) => {
+          const line = cart.find((l) => l.product.id === p.id);
+          return line ? { ...p, stock_qty: Math.max(0, p.stock_qty - line.qty) } : p;
+        }));
+        toast.success(`Sale queued offline — KSh ${total.toLocaleString()}. Will sync when online.`);
+        setCart([]); setCustomer(""); setPhone("");
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to queue sale");
+      }
+      setPaying(false);
+      return;
+    }
     if (method === "mpesa") {
       if (!phone.trim()) { setPaying(false); return toast.error("Enter customer phone for M-Pesa"); }
       const { data: stk, error: stkErr } = await supabase.functions.invoke("mpesa-stk-push", {
