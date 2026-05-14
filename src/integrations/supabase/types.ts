@@ -180,6 +180,7 @@ export type Database = {
       patient_visits: {
         Row: {
           attended_by: string | null
+          county: string | null
           created_at: string
           diagnosis: string | null
           id: string
@@ -193,6 +194,7 @@ export type Database = {
         }
         Insert: {
           attended_by?: string | null
+          county?: string | null
           created_at?: string
           diagnosis?: string | null
           id?: string
@@ -206,6 +208,7 @@ export type Database = {
         }
         Update: {
           attended_by?: string | null
+          county?: string | null
           created_at?: string
           diagnosis?: string | null
           id?: string
@@ -234,6 +237,7 @@ export type Database = {
           auth_user_id: string | null
           chronic_conditions: string | null
           chronic_review_date: string | null
+          county: string | null
           created_at: string
           created_by: string | null
           date_of_birth: string | null
@@ -259,6 +263,7 @@ export type Database = {
           auth_user_id?: string | null
           chronic_conditions?: string | null
           chronic_review_date?: string | null
+          county?: string | null
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
@@ -284,6 +289,7 @@ export type Database = {
           auth_user_id?: string | null
           chronic_conditions?: string | null
           chronic_review_date?: string | null
+          county?: string | null
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
@@ -608,6 +614,7 @@ export type Database = {
       sales: {
         Row: {
           cashier_id: string
+          county: string | null
           created_at: string
           customer_name: string | null
           customer_phone: string | null
@@ -619,6 +626,7 @@ export type Database = {
         }
         Insert: {
           cashier_id: string
+          county?: string | null
           created_at?: string
           customer_name?: string | null
           customer_phone?: string | null
@@ -630,6 +638,7 @@ export type Database = {
         }
         Update: {
           cashier_id?: string
+          county?: string | null
           created_at?: string
           customer_name?: string | null
           customer_phone?: string | null
@@ -761,6 +770,7 @@ export type Database = {
       }
       tenants: {
         Row: {
+          county: string | null
           created_at: string
           created_by: string
           id: string
@@ -769,6 +779,7 @@ export type Database = {
           type: string
         }
         Insert: {
+          county?: string | null
           created_at?: string
           created_by: string
           id?: string
@@ -777,6 +788,7 @@ export type Database = {
           type?: string
         }
         Update: {
+          county?: string | null
           created_at?: string
           created_by?: string
           id?: string
