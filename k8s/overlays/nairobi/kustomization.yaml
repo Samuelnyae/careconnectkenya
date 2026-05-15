@@ -1,0 +1,28 @@
+# Primary region: Nairobi (e.g. Safaricom Cloud / on-prem KE)
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: careconnect
+resources:
+  - ../../namespace.yaml
+  - ../../configmap.yaml
+  - ../../secret.example.yaml
+  - ../../deployment.yaml
+  - ../../service.yaml
+  - ../../ingress.yaml
+  - ../../hpa.yaml
+  - ../../pdb.yaml
+patches:
+  - target:
+      kind: ConfigMap
+      name: careconnect-config
+    patch: |-
+      - op: replace
+        path: /data/APP_REGION
+        value: nairobi-primary
+  - target:
+      kind: Deployment
+      name: careconnect-web
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 5

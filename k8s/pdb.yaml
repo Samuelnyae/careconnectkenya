@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: careconnect-web
+  namespace: careconnect
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: careconnect-web

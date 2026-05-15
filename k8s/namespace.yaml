@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: careconnect
+  labels:
+    name: careconnect
+    app.kubernetes.io/part-of: careconnect-kenya

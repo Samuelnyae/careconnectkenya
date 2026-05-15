@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: careconnect-config
+  namespace: careconnect
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  APP_REGION: "nairobi"
+  LOG_LEVEL: "info"
