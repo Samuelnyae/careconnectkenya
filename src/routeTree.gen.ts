@@ -22,6 +22,7 @@ import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as AiInsightsRouteImport } from './routes/ai-insights'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as RxTokenRouteImport } from './routes/rx.$token'
 import { Route as PatientsIdRouteImport } from './routes/patients.$id'
 import { Route as ConsultIdRouteImport } from './routes/consult.$id'
@@ -93,6 +94,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const RxTokenRoute = RxTokenRouteImport.update({
   id: '/rx/$token',
   path: '/rx/$token',
@@ -122,7 +128,7 @@ const ApiPublicHooksSendRemindersRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
@@ -138,11 +144,11 @@ export interface FileRoutesByFullPath {
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/admin/': typeof AdminIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
@@ -158,12 +164,13 @@ export interface FileRoutesByTo {
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/admin': typeof AdminIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
@@ -179,6 +186,7 @@ export interface FileRoutesById {
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/admin/': typeof AdminIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRouteTypes {
@@ -201,11 +209,11 @@ export interface FileRouteTypes {
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/admin/'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/ai-insights'
     | '/appointments'
     | '/auth'
@@ -221,6 +229,7 @@ export interface FileRouteTypes {
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/admin'
     | '/api/public/hooks/send-reminders'
   id:
     | '__root__'
@@ -241,12 +250,13 @@ export interface FileRouteTypes {
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/admin/'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
   AuthRoute: typeof AuthRouteWithChildren
@@ -356,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/rx/$token': {
       id: '/rx/$token'
       path: '/rx/$token'
@@ -394,6 +411,16 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface AuthRouteChildren {
   AuthPhoneRoute: typeof AuthPhoneRoute
 }
@@ -418,7 +445,7 @@ const PatientsRouteWithChildren = PatientsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
   AuthRoute: AuthRouteWithChildren,
