@@ -22,10 +22,15 @@ import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as AiInsightsRouteImport } from './routes/ai-insights'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as RxTokenRouteImport } from './routes/rx.$token'
 import { Route as PatientsIdRouteImport } from './routes/patients.$id'
 import { Route as ConsultIdRouteImport } from './routes/consult.$id'
 import { Route as AuthPhoneRouteImport } from './routes/auth.phone'
+import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
+import { Route as AdminMembersRouteImport } from './routes/admin.members'
+import { Route as AdminHealthRouteImport } from './routes/admin.health'
+import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
 const SettingsRoute = SettingsRouteImport.update({
@@ -93,6 +98,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const RxTokenRoute = RxTokenRouteImport.update({
   id: '/rx/$token',
   path: '/rx/$token',
@@ -113,6 +123,26 @@ const AuthPhoneRoute = AuthPhoneRouteImport.update({
   path: '/phone',
   getParentRoute: () => AuthRoute,
 } as any)
+const AdminTenantsRoute = AdminTenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMembersRoute = AdminMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHealthRoute = AdminHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminsRoute = AdminAdminsRouteImport.update({
+  id: '/admins',
+  path: '/admins',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiPublicHooksSendRemindersRoute =
   ApiPublicHooksSendRemindersRouteImport.update({
     id: '/api/public/hooks/send-reminders',
@@ -122,7 +152,7 @@ const ApiPublicHooksSendRemindersRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
@@ -134,15 +164,19 @@ export interface FileRoutesByFullPath {
   '/pos': typeof PosRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
+  '/admin/admins': typeof AdminAdminsRoute
+  '/admin/health': typeof AdminHealthRoute
+  '/admin/members': typeof AdminMembersRoute
+  '/admin/tenants': typeof AdminTenantsRoute
   '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/admin/': typeof AdminIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
@@ -154,16 +188,21 @@ export interface FileRoutesByTo {
   '/pos': typeof PosRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
+  '/admin/admins': typeof AdminAdminsRoute
+  '/admin/health': typeof AdminHealthRoute
+  '/admin/members': typeof AdminMembersRoute
+  '/admin/tenants': typeof AdminTenantsRoute
   '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/admin': typeof AdminIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
@@ -175,10 +214,15 @@ export interface FileRoutesById {
   '/pos': typeof PosRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
+  '/admin/admins': typeof AdminAdminsRoute
+  '/admin/health': typeof AdminHealthRoute
+  '/admin/members': typeof AdminMembersRoute
+  '/admin/tenants': typeof AdminTenantsRoute
   '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
+  '/admin/': typeof AdminIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRouteTypes {
@@ -197,15 +241,19 @@ export interface FileRouteTypes {
     | '/pos'
     | '/reminders'
     | '/settings'
+    | '/admin/admins'
+    | '/admin/health'
+    | '/admin/members'
+    | '/admin/tenants'
     | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/admin/'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/ai-insights'
     | '/appointments'
     | '/auth'
@@ -217,10 +265,15 @@ export interface FileRouteTypes {
     | '/pos'
     | '/reminders'
     | '/settings'
+    | '/admin/admins'
+    | '/admin/health'
+    | '/admin/members'
+    | '/admin/tenants'
     | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/admin'
     | '/api/public/hooks/send-reminders'
   id:
     | '__root__'
@@ -237,16 +290,21 @@ export interface FileRouteTypes {
     | '/pos'
     | '/reminders'
     | '/settings'
+    | '/admin/admins'
+    | '/admin/health'
+    | '/admin/members'
+    | '/admin/tenants'
     | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
+    | '/admin/'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
   AuthRoute: typeof AuthRouteWithChildren
@@ -356,6 +414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/rx/$token': {
       id: '/rx/$token'
       path: '/rx/$token'
@@ -384,6 +449,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthPhoneRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/admin/tenants': {
+      id: '/admin/tenants'
+      path: '/tenants'
+      fullPath: '/admin/tenants'
+      preLoaderRoute: typeof AdminTenantsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/members': {
+      id: '/admin/members'
+      path: '/members'
+      fullPath: '/admin/members'
+      preLoaderRoute: typeof AdminMembersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/health': {
+      id: '/admin/health'
+      path: '/health'
+      fullPath: '/admin/health'
+      preLoaderRoute: typeof AdminHealthRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/admins': {
+      id: '/admin/admins'
+      path: '/admins'
+      fullPath: '/admin/admins'
+      preLoaderRoute: typeof AdminAdminsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/public/hooks/send-reminders': {
       id: '/api/public/hooks/send-reminders'
       path: '/api/public/hooks/send-reminders'
@@ -393,6 +486,24 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminRouteChildren {
+  AdminAdminsRoute: typeof AdminAdminsRoute
+  AdminHealthRoute: typeof AdminHealthRoute
+  AdminMembersRoute: typeof AdminMembersRoute
+  AdminTenantsRoute: typeof AdminTenantsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminsRoute: AdminAdminsRoute,
+  AdminHealthRoute: AdminHealthRoute,
+  AdminMembersRoute: AdminMembersRoute,
+  AdminTenantsRoute: AdminTenantsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AuthRouteChildren {
   AuthPhoneRoute: typeof AuthPhoneRoute
@@ -418,7 +529,7 @@ const PatientsRouteWithChildren = PatientsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
   AuthRoute: AuthRouteWithChildren,
