@@ -29,6 +29,7 @@ import { Route as ConsultIdRouteImport } from './routes/consult.$id'
 import { Route as AuthPhoneRouteImport } from './routes/auth.phone'
 import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
 import { Route as AdminMembersRouteImport } from './routes/admin.members'
+import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
 const SettingsRoute = SettingsRouteImport.update({
@@ -131,6 +132,11 @@ const AdminMembersRoute = AdminMembersRouteImport.update({
   path: '/members',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminsRoute = AdminAdminsRouteImport.update({
+  id: '/admins',
+  path: '/admins',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiPublicHooksSendRemindersRoute =
   ApiPublicHooksSendRemindersRouteImport.update({
     id: '/api/public/hooks/send-reminders',
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/pos': typeof PosRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
+  '/admin/admins': typeof AdminAdminsRoute
   '/admin/members': typeof AdminMembersRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/auth/phone': typeof AuthPhoneRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/pos': typeof PosRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
+  '/admin/admins': typeof AdminAdminsRoute
   '/admin/members': typeof AdminMembersRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/auth/phone': typeof AuthPhoneRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/pos': typeof PosRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
+  '/admin/admins': typeof AdminAdminsRoute
   '/admin/members': typeof AdminMembersRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/auth/phone': typeof AuthPhoneRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/pos'
     | '/reminders'
     | '/settings'
+    | '/admin/admins'
     | '/admin/members'
     | '/admin/tenants'
     | '/auth/phone'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/pos'
     | '/reminders'
     | '/settings'
+    | '/admin/admins'
     | '/admin/members'
     | '/admin/tenants'
     | '/auth/phone'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/pos'
     | '/reminders'
     | '/settings'
+    | '/admin/admins'
     | '/admin/members'
     | '/admin/tenants'
     | '/auth/phone'
@@ -439,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMembersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/admins': {
+      id: '/admin/admins'
+      path: '/admins'
+      fullPath: '/admin/admins'
+      preLoaderRoute: typeof AdminAdminsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/public/hooks/send-reminders': {
       id: '/api/public/hooks/send-reminders'
       path: '/api/public/hooks/send-reminders'
@@ -450,12 +469,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAdminsRoute: typeof AdminAdminsRoute
   AdminMembersRoute: typeof AdminMembersRoute
   AdminTenantsRoute: typeof AdminTenantsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminsRoute: AdminAdminsRoute,
   AdminMembersRoute: AdminMembersRoute,
   AdminTenantsRoute: AdminTenantsRoute,
   AdminIndexRoute: AdminIndexRoute,
