@@ -16,6 +16,7 @@ import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
 import { Route as MedicationLossesRouteImport } from './routes/medication-losses'
 import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as FraudDetectionRouteImport } from './routes/fraud-detection'
 import { Route as DiseaseTrendsRouteImport } from './routes/disease-trends'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClaimsRouteImport } from './routes/claims'
@@ -68,6 +69,11 @@ const MedicationLossesRoute = MedicationLossesRouteImport.update({
 const InventoryRoute = InventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FraudDetectionRoute = FraudDetectionRouteImport.update({
+  id: '/fraud-detection',
+  path: '/fraud-detection',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiseaseTrendsRoute = DiseaseTrendsRouteImport.update({
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
+  '/fraud-detection': typeof FraudDetectionRoute
   '/inventory': typeof InventoryRoute
   '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
+  '/fraud-detection': typeof FraudDetectionRoute
   '/inventory': typeof InventoryRoute
   '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
@@ -225,6 +233,7 @@ export interface FileRoutesById {
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
+  '/fraud-detection': typeof FraudDetectionRoute
   '/inventory': typeof InventoryRoute
   '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
@@ -254,6 +263,7 @@ export interface FileRouteTypes {
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
+    | '/fraud-detection'
     | '/inventory'
     | '/medication-losses'
     | '/patients'
@@ -280,6 +290,7 @@ export interface FileRouteTypes {
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
+    | '/fraud-detection'
     | '/inventory'
     | '/medication-losses'
     | '/patients'
@@ -307,6 +318,7 @@ export interface FileRouteTypes {
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
+    | '/fraud-detection'
     | '/inventory'
     | '/medication-losses'
     | '/patients'
@@ -335,6 +347,7 @@ export interface RootRouteChildren {
   ClaimsRoute: typeof ClaimsRoute
   DashboardRoute: typeof DashboardRoute
   DiseaseTrendsRoute: typeof DiseaseTrendsRoute
+  FraudDetectionRoute: typeof FraudDetectionRoute
   InventoryRoute: typeof InventoryRoute
   MedicationLossesRoute: typeof MedicationLossesRoute
   PatientsRoute: typeof PatientsRouteWithChildren
@@ -396,6 +409,13 @@ declare module '@tanstack/react-router' {
       path: '/inventory'
       fullPath: '/inventory'
       preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fraud-detection': {
+      id: '/fraud-detection'
+      path: '/fraud-detection'
+      fullPath: '/fraud-detection'
+      preLoaderRoute: typeof FraudDetectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/disease-trends': {
@@ -576,6 +596,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClaimsRoute: ClaimsRoute,
   DashboardRoute: DashboardRoute,
   DiseaseTrendsRoute: DiseaseTrendsRoute,
+  FraudDetectionRoute: FraudDetectionRoute,
   InventoryRoute: InventoryRoute,
   MedicationLossesRoute: MedicationLossesRoute,
   PatientsRoute: PatientsRouteWithChildren,
