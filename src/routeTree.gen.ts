@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RemindersRouteImport } from './routes/reminders'
+import { Route as RecordsRouteImport } from './routes/records'
 import { Route as PrescriptionsRouteImport } from './routes/prescriptions'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
@@ -44,6 +45,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const RemindersRoute = RemindersRouteImport.update({
   id: '/reminders',
   path: '/reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordsRoute = RecordsRouteImport.update({
+  id: '/records',
+  path: '/records',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrescriptionsRoute = PrescriptionsRouteImport.update({
@@ -183,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -239,6 +247,7 @@ export interface FileRoutesById {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -269,6 +278,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/records'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -296,6 +306,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/records'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/records'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -353,6 +365,7 @@ export interface RootRouteChildren {
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
   PrescriptionsRoute: typeof PrescriptionsRoute
+  RecordsRoute: typeof RecordsRoute
   RemindersRoute: typeof RemindersRoute
   SettingsRoute: typeof SettingsRoute
   ConsultIdRoute: typeof ConsultIdRoute
@@ -374,6 +387,13 @@ declare module '@tanstack/react-router' {
       path: '/reminders'
       fullPath: '/reminders'
       preLoaderRoute: typeof RemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/records': {
+      id: '/records'
+      path: '/records'
+      fullPath: '/records'
+      preLoaderRoute: typeof RecordsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prescriptions': {
@@ -602,6 +622,7 @@ const rootRouteChildren: RootRouteChildren = {
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
   PrescriptionsRoute: PrescriptionsRoute,
+  RecordsRoute: RecordsRoute,
   RemindersRoute: RemindersRoute,
   SettingsRoute: SettingsRoute,
   ConsultIdRoute: ConsultIdRoute,
