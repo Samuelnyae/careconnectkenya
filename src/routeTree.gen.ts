@@ -11,12 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RemindersRouteImport } from './routes/reminders'
+import { Route as RecordsRouteImport } from './routes/records'
+import { Route as PrescriptionsRouteImport } from './routes/prescriptions'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
+import { Route as MedicationLossesRouteImport } from './routes/medication-losses'
 import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as FraudDetectionRouteImport } from './routes/fraud-detection'
 import { Route as DiseaseTrendsRouteImport } from './routes/disease-trends'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClaimsRouteImport } from './routes/claims'
+import { Route as BookkeepingRouteImport } from './routes/bookkeeping'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as AiInsightsRouteImport } from './routes/ai-insights'
@@ -43,6 +48,16 @@ const RemindersRoute = RemindersRouteImport.update({
   path: '/reminders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecordsRoute = RecordsRouteImport.update({
+  id: '/records',
+  path: '/records',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrescriptionsRoute = PrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PosRoute = PosRouteImport.update({
   id: '/pos',
   path: '/pos',
@@ -53,9 +68,19 @@ const PatientsRoute = PatientsRouteImport.update({
   path: '/patients',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MedicationLossesRoute = MedicationLossesRouteImport.update({
+  id: '/medication-losses',
+  path: '/medication-losses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InventoryRoute = InventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FraudDetectionRoute = FraudDetectionRouteImport.update({
+  id: '/fraud-detection',
+  path: '/fraud-detection',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiseaseTrendsRoute = DiseaseTrendsRouteImport.update({
@@ -71,6 +96,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ClaimsRoute = ClaimsRouteImport.update({
   id: '/claims',
   path: '/claims',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookkeepingRoute = BookkeepingRouteImport.update({
+  id: '/bookkeeping',
+  path: '/bookkeeping',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -156,12 +186,17 @@ export interface FileRoutesByFullPath {
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
+  '/fraud-detection': typeof FraudDetectionRoute
   '/inventory': typeof InventoryRoute
+  '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/prescriptions': typeof PrescriptionsRoute
+  '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -180,12 +215,17 @@ export interface FileRoutesByTo {
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
+  '/fraud-detection': typeof FraudDetectionRoute
   '/inventory': typeof InventoryRoute
+  '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/prescriptions': typeof PrescriptionsRoute
+  '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -206,12 +246,17 @@ export interface FileRoutesById {
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
+  '/fraud-detection': typeof FraudDetectionRoute
   '/inventory': typeof InventoryRoute
+  '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/prescriptions': typeof PrescriptionsRoute
+  '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -233,12 +278,17 @@ export interface FileRouteTypes {
     | '/ai-insights'
     | '/appointments'
     | '/auth'
+    | '/bookkeeping'
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
+    | '/fraud-detection'
     | '/inventory'
+    | '/medication-losses'
     | '/patients'
     | '/pos'
+    | '/prescriptions'
+    | '/records'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -257,12 +307,17 @@ export interface FileRouteTypes {
     | '/ai-insights'
     | '/appointments'
     | '/auth'
+    | '/bookkeeping'
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
+    | '/fraud-detection'
     | '/inventory'
+    | '/medication-losses'
     | '/patients'
     | '/pos'
+    | '/prescriptions'
+    | '/records'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -282,12 +337,17 @@ export interface FileRouteTypes {
     | '/ai-insights'
     | '/appointments'
     | '/auth'
+    | '/bookkeeping'
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
+    | '/fraud-detection'
     | '/inventory'
+    | '/medication-losses'
     | '/patients'
     | '/pos'
+    | '/prescriptions'
+    | '/records'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -308,12 +368,17 @@ export interface RootRouteChildren {
   AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
   AuthRoute: typeof AuthRouteWithChildren
+  BookkeepingRoute: typeof BookkeepingRoute
   ClaimsRoute: typeof ClaimsRoute
   DashboardRoute: typeof DashboardRoute
   DiseaseTrendsRoute: typeof DiseaseTrendsRoute
+  FraudDetectionRoute: typeof FraudDetectionRoute
   InventoryRoute: typeof InventoryRoute
+  MedicationLossesRoute: typeof MedicationLossesRoute
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
+  PrescriptionsRoute: typeof PrescriptionsRoute
+  RecordsRoute: typeof RecordsRoute
   RemindersRoute: typeof RemindersRoute
   SettingsRoute: typeof SettingsRoute
   ConsultIdRoute: typeof ConsultIdRoute
@@ -337,6 +402,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/records': {
+      id: '/records'
+      path: '/records'
+      fullPath: '/records'
+      preLoaderRoute: typeof RecordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prescriptions': {
+      id: '/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/prescriptions'
+      preLoaderRoute: typeof PrescriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pos': {
       id: '/pos'
       path: '/pos'
@@ -351,11 +430,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PatientsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/medication-losses': {
+      id: '/medication-losses'
+      path: '/medication-losses'
+      fullPath: '/medication-losses'
+      preLoaderRoute: typeof MedicationLossesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inventory': {
       id: '/inventory'
       path: '/inventory'
       fullPath: '/inventory'
       preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fraud-detection': {
+      id: '/fraud-detection'
+      path: '/fraud-detection'
+      fullPath: '/fraud-detection'
+      preLoaderRoute: typeof FraudDetectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/disease-trends': {
@@ -377,6 +470,13 @@ declare module '@tanstack/react-router' {
       path: '/claims'
       fullPath: '/claims'
       preLoaderRoute: typeof ClaimsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookkeeping': {
+      id: '/bookkeeping'
+      path: '/bookkeeping'
+      fullPath: '/bookkeeping'
+      preLoaderRoute: typeof BookkeepingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -533,12 +633,17 @@ const rootRouteChildren: RootRouteChildren = {
   AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
   AuthRoute: AuthRouteWithChildren,
+  BookkeepingRoute: BookkeepingRoute,
   ClaimsRoute: ClaimsRoute,
   DashboardRoute: DashboardRoute,
   DiseaseTrendsRoute: DiseaseTrendsRoute,
+  FraudDetectionRoute: FraudDetectionRoute,
   InventoryRoute: InventoryRoute,
+  MedicationLossesRoute: MedicationLossesRoute,
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
+  PrescriptionsRoute: PrescriptionsRoute,
+  RecordsRoute: RecordsRoute,
   RemindersRoute: RemindersRoute,
   SettingsRoute: SettingsRoute,
   ConsultIdRoute: ConsultIdRoute,
@@ -548,12 +653,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

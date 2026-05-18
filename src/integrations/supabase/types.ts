@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      accounts: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          parent_id: string | null
+          tenant_id: string
+          type: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          parent_id?: string | null
+          tenant_id: string
+          type: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          parent_id?: string | null
+          tenant_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       appointments: {
         Row: {
           created_at: string
@@ -85,6 +126,87 @@ export type Database = {
           },
         ]
       }
+      journal_entries: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          entry_date: string
+          id: string
+          memo: string | null
+          posted: boolean
+          reference: string | null
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          entry_date?: string
+          id?: string
+          memo?: string | null
+          posted?: boolean
+          reference?: string | null
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          entry_date?: string
+          id?: string
+          memo?: string | null
+          posted?: boolean
+          reference?: string | null
+          tenant_id?: string
+        }
+        Relationships: []
+      }
+      journal_lines: {
+        Row: {
+          account_id: string
+          created_at: string
+          credit: number
+          debit: number
+          entry_id: string
+          id: string
+          memo: string | null
+          tenant_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          credit?: number
+          debit?: number
+          entry_id: string
+          id?: string
+          memo?: string | null
+          tenant_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          credit?: number
+          debit?: number
+          entry_id?: string
+          id?: string
+          memo?: string | null
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_lines_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_lines_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lab_results: {
         Row: {
           created_at: string
@@ -142,6 +264,54 @@ export type Database = {
           test_name?: string
           updated_at?: string
           visit_id?: string | null
+        }
+        Relationships: []
+      }
+      medication_losses: {
+        Row: {
+          batch_number: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          occurred_at: string
+          product_id: string | null
+          product_name: string
+          quantity: number
+          reason: string
+          recorded_by: string | null
+          tenant_id: string
+          total_cost: number
+          unit_cost: number
+        }
+        Insert: {
+          batch_number?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          occurred_at?: string
+          product_id?: string | null
+          product_name: string
+          quantity: number
+          reason: string
+          recorded_by?: string | null
+          tenant_id: string
+          total_cost?: number
+          unit_cost?: number
+        }
+        Update: {
+          batch_number?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          occurred_at?: string
+          product_id?: string | null
+          product_name?: string
+          quantity?: number
+          reason?: string
+          recorded_by?: string | null
+          tenant_id?: string
+          total_cost?: number
+          unit_cost?: number
         }
         Relationships: []
       }
@@ -378,6 +548,8 @@ export type Database = {
         Row: {
           appointment_id: string | null
           created_at: string
+          dispensed_at: string | null
+          dispensed_by: string | null
           dosage: string | null
           drug_name: string
           duration: string | null
@@ -387,12 +559,17 @@ export type Database = {
           patient_id: string
           prescribed_by: string | null
           product_id: string | null
+          quantity: number | null
+          refills_remaining: number
+          status: string
           tenant_id: string
           visit_id: string | null
         }
         Insert: {
           appointment_id?: string | null
           created_at?: string
+          dispensed_at?: string | null
+          dispensed_by?: string | null
           dosage?: string | null
           drug_name: string
           duration?: string | null
@@ -402,12 +579,17 @@ export type Database = {
           patient_id: string
           prescribed_by?: string | null
           product_id?: string | null
+          quantity?: number | null
+          refills_remaining?: number
+          status?: string
           tenant_id: string
           visit_id?: string | null
         }
         Update: {
           appointment_id?: string | null
           created_at?: string
+          dispensed_at?: string | null
+          dispensed_by?: string | null
           dosage?: string | null
           drug_name?: string
           duration?: string | null
@@ -417,6 +599,9 @@ export type Database = {
           patient_id?: string
           prescribed_by?: string | null
           product_id?: string | null
+          quantity?: number | null
+          refills_remaining?: number
+          status?: string
           tenant_id?: string
           visit_id?: string | null
         }
@@ -563,6 +748,48 @@ export type Database = {
           status?: string
           tenant_id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      rx_fraud_flags: {
+        Row: {
+          created_at: string
+          details: Json | null
+          flag_type: string
+          id: string
+          prescription_id: string | null
+          reason: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          severity: string
+          status: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          flag_type: string
+          id?: string
+          prescription_id?: string | null
+          reason: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          status?: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          flag_type?: string
+          id?: string
+          prescription_id?: string | null
+          reason?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          status?: string
+          tenant_id?: string
         }
         Relationships: []
       }
