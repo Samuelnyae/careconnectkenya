@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, ShoppingCart, Package, LogOut, Building2, Settings, Shield, Users, FileText, Video, Sparkles, Bell, Activity } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, LogOut, Building2, Settings, Shield, Users, FileText, Video, Sparkles, Bell, Activity, AlertOctagon, BookOpen, Pill, ShieldAlert, FolderHeart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -21,10 +21,15 @@ const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Pharmacy POS", url: "/pos", icon: ShoppingCart },
   { title: "Inventory", url: "/inventory", icon: Package },
+  { title: "Med Losses", url: "/medication-losses", icon: AlertOctagon },
   { title: "Patients", url: "/patients", icon: Users },
+  { title: "Patient Records", url: "/records", icon: FolderHeart },
+  { title: "Prescriptions", url: "/prescriptions", icon: Pill },
+  { title: "Fraud Detection", url: "/fraud-detection", icon: ShieldAlert },
   { title: "Telemedicine", url: "/appointments", icon: Video },
   { title: "Reminders", url: "/reminders", icon: Bell },
   { title: "SHA Claims", url: "/claims", icon: FileText },
+  { title: "Bookkeeping", url: "/bookkeeping", icon: BookOpen },
   { title: "AI Insights", url: "/ai-insights", icon: Sparkles },
   { title: "Disease Trends", url: "/disease-trends", icon: Activity },
   { title: "Settings", url: "/settings", icon: Settings },
