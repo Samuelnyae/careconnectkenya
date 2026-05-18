@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RemindersRouteImport } from './routes/reminders'
+import { Route as PrescriptionsRouteImport } from './routes/prescriptions'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
+import { Route as MedicationLossesRouteImport } from './routes/medication-losses'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as DiseaseTrendsRouteImport } from './routes/disease-trends'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -43,6 +45,11 @@ const RemindersRoute = RemindersRouteImport.update({
   path: '/reminders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrescriptionsRoute = PrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PosRoute = PosRouteImport.update({
   id: '/pos',
   path: '/pos',
@@ -51,6 +58,11 @@ const PosRoute = PosRouteImport.update({
 const PatientsRoute = PatientsRouteImport.update({
   id: '/patients',
   path: '/patients',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicationLossesRoute = MedicationLossesRouteImport.update({
+  id: '/medication-losses',
+  path: '/medication-losses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InventoryRoute = InventoryRouteImport.update({
@@ -160,8 +172,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
   '/inventory': typeof InventoryRoute
+  '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/prescriptions': typeof PrescriptionsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -184,8 +198,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
   '/inventory': typeof InventoryRoute
+  '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/prescriptions': typeof PrescriptionsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -210,8 +226,10 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
   '/inventory': typeof InventoryRoute
+  '/medication-losses': typeof MedicationLossesRoute
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
+  '/prescriptions': typeof PrescriptionsRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -237,8 +255,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/disease-trends'
     | '/inventory'
+    | '/medication-losses'
     | '/patients'
     | '/pos'
+    | '/prescriptions'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -261,8 +281,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/disease-trends'
     | '/inventory'
+    | '/medication-losses'
     | '/patients'
     | '/pos'
+    | '/prescriptions'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -286,8 +308,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/disease-trends'
     | '/inventory'
+    | '/medication-losses'
     | '/patients'
     | '/pos'
+    | '/prescriptions'
     | '/reminders'
     | '/settings'
     | '/admin/admins'
@@ -312,8 +336,10 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DiseaseTrendsRoute: typeof DiseaseTrendsRoute
   InventoryRoute: typeof InventoryRoute
+  MedicationLossesRoute: typeof MedicationLossesRoute
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
+  PrescriptionsRoute: typeof PrescriptionsRoute
   RemindersRoute: typeof RemindersRoute
   SettingsRoute: typeof SettingsRoute
   ConsultIdRoute: typeof ConsultIdRoute
@@ -337,6 +363,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prescriptions': {
+      id: '/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/prescriptions'
+      preLoaderRoute: typeof PrescriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pos': {
       id: '/pos'
       path: '/pos'
@@ -349,6 +382,13 @@ declare module '@tanstack/react-router' {
       path: '/patients'
       fullPath: '/patients'
       preLoaderRoute: typeof PatientsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medication-losses': {
+      id: '/medication-losses'
+      path: '/medication-losses'
+      fullPath: '/medication-losses'
+      preLoaderRoute: typeof MedicationLossesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -537,8 +577,10 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DiseaseTrendsRoute: DiseaseTrendsRoute,
   InventoryRoute: InventoryRoute,
+  MedicationLossesRoute: MedicationLossesRoute,
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
+  PrescriptionsRoute: PrescriptionsRoute,
   RemindersRoute: RemindersRoute,
   SettingsRoute: SettingsRoute,
   ConsultIdRoute: ConsultIdRoute,
@@ -548,3 +590,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
