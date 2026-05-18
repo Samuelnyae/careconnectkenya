@@ -39,7 +39,8 @@ export const scanDuplicatePrescriptions = createServerFn({ method: "POST" })
     if (list.length < 2) return { scanned: list.length, flagged: 0, flags: [] as Array<{ prescription_id: string; reason: string; severity: string }> };
 
     // Heuristic pass: identical drug + dose + patient within 14 days
-    const flags: Array<{ prescription_id: string; reason: string; severity: "low" | "medium" | "high" | "critical"; details: Record<string, unknown> }> = [];
+  type JsonObj = { [k: string]: string | number | boolean | null };
+  const flags: Array<{ prescription_id: string; reason: string; severity: "low" | "medium" | "high" | "critical"; details: JsonObj }> = [];
     const seen = new Map<string, Rx>();
     for (const r of list) {
       const key = `${r.patient_id}|${r.drug_name.toLowerCase()}|${(r.dosage ?? "").toLowerCase()}`;
@@ -86,7 +87,7 @@ export const scanDuplicatePrescriptions = createServerFn({ method: "POST" })
                 prescription_id: f.id,
                 reason: `AI: ${f.reason}`,
                 severity: (["low", "medium", "high", "critical"].includes(f.severity) ? f.severity : "medium") as "low" | "medium" | "high" | "critical",
-                details: { source: "ai" },
+                details: { source: "ai" } as JsonObj,
               });
             }
           }
@@ -101,7 +102,7 @@ export const scanDuplicatePrescriptions = createServerFn({ method: "POST" })
       const ids = flags.map((f) => f.prescription_id);
       const { data: existing } = await supabase
         .from("rx_fraud_flags").select("prescription_id").eq("tenant_id", data.tenantId).in("prescription_id", ids).eq("status", "open");
-      const existingSet = new Set((existing ?? []).map((e: { prescription_id: string }) => e.prescription_id));
+      const existingSet = new Set(((existing ?? []) as Array<{ prescription_id: string | null }>).map((e) => e.prescription_id).filter((x): x is string => !!x));
       const fresh = flags.filter((f) => !existingSet.has(f.prescription_id));
       if (fresh.length > 0) {
         await supabase.from("rx_fraud_flags").insert(fresh.map((f) => ({
@@ -110,7 +111,7 @@ export const scanDuplicatePrescriptions = createServerFn({ method: "POST" })
           flag_type: "duplicate",
           severity: f.severity,
           reason: f.reason,
-          details: f.details,
+          details: f.details as unknown as never,
         })));
         // mark the Rx as flagged
         await supabase.from("prescriptions").update({ status: "flagged" }).in("id", fresh.map((f) => f.prescription_id));
