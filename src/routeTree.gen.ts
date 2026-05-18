@@ -21,6 +21,7 @@ import { Route as FraudDetectionRouteImport } from './routes/fraud-detection'
 import { Route as DiseaseTrendsRouteImport } from './routes/disease-trends'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClaimsRouteImport } from './routes/claims'
+import { Route as BookkeepingRouteImport } from './routes/bookkeeping'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as AiInsightsRouteImport } from './routes/ai-insights'
@@ -95,6 +96,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ClaimsRoute = ClaimsRouteImport.update({
   id: '/claims',
   path: '/claims',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookkeepingRoute = BookkeepingRouteImport.update({
+  id: '/bookkeeping',
+  path: '/bookkeeping',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
   '/disease-trends': typeof DiseaseTrendsRoute
@@ -269,6 +278,7 @@ export interface FileRouteTypes {
     | '/ai-insights'
     | '/appointments'
     | '/auth'
+    | '/bookkeeping'
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/ai-insights'
     | '/appointments'
     | '/auth'
+    | '/bookkeeping'
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
@@ -326,6 +337,7 @@ export interface FileRouteTypes {
     | '/ai-insights'
     | '/appointments'
     | '/auth'
+    | '/bookkeeping'
     | '/claims'
     | '/dashboard'
     | '/disease-trends'
@@ -356,6 +368,7 @@ export interface RootRouteChildren {
   AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
   AuthRoute: typeof AuthRouteWithChildren
+  BookkeepingRoute: typeof BookkeepingRoute
   ClaimsRoute: typeof ClaimsRoute
   DashboardRoute: typeof DashboardRoute
   DiseaseTrendsRoute: typeof DiseaseTrendsRoute
@@ -457,6 +470,13 @@ declare module '@tanstack/react-router' {
       path: '/claims'
       fullPath: '/claims'
       preLoaderRoute: typeof ClaimsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookkeeping': {
+      id: '/bookkeeping'
+      path: '/bookkeeping'
+      fullPath: '/bookkeeping'
+      preLoaderRoute: typeof BookkeepingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -613,6 +633,7 @@ const rootRouteChildren: RootRouteChildren = {
   AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
   AuthRoute: AuthRouteWithChildren,
+  BookkeepingRoute: BookkeepingRoute,
   ClaimsRoute: ClaimsRoute,
   DashboardRoute: DashboardRoute,
   DiseaseTrendsRoute: DiseaseTrendsRoute,
