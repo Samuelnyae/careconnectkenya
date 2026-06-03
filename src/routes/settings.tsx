@@ -28,6 +28,7 @@ const ROLES = ["owner", "admin", "pharmacist", "cashier", "staff"] as const;
 
 function SettingsPage() {
   const { currentTenantId, currentTenant, currentRole, user } = useAuth();
+  const { preference, setPreference, systemPrefersReduced } = useMotion();
   const [members, setMembers] = useState<Member[]>([]);
   const [name, setName] = useState("");
   const [county, setCounty] = useState<string>("");
