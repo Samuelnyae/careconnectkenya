@@ -11,9 +11,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Trash2, Monitor, Wind, Ban } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import { KENYA_COUNTIES } from "@/lib/kenya-counties";
+import { useMotion } from "@/lib/motion-context";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type AppRole = Database["public"]["Enums"]["app_role"];
 
