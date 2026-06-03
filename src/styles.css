@@ -240,3 +240,61 @@
   color: transparent;
   animation: shimmer 4s linear infinite;
 }
+
+/* ===== Reduced motion overrides ===== */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) *,
+  html:not([data-motion="full"]) *::before,
+  html:not([data-motion="full"]) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after,
+html[data-motion="none"] *,
+html[data-motion="none"] *::before,
+html[data-motion="none"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html[data-motion="reduced"] .hover-lift:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+html[data-motion="none"] .hover-lift:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+html[data-motion="reduced"] .glass,
+html[data-motion="reduced"] .glass-strong,
+html[data-motion="reduced"] .glass-subtle,
+html[data-motion="reduced"] .glass-sidebar {
+  backdrop-filter: none !important;
+}
+
+html[data-motion="none"] .glass,
+html[data-motion="none"] .glass-strong,
+html[data-motion="none"] .glass-subtle,
+html[data-motion="none"] .glass-sidebar {
+  backdrop-filter: none !important;
+}
+
+/* Respect system preference when data-motion is not set */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

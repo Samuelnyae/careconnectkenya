@@ -11,9 +11,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Trash2, Monitor, Wind, Ban } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import { KENYA_COUNTIES } from "@/lib/kenya-counties";
+import { useMotion } from "@/lib/motion-context";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type AppRole = Database["public"]["Enums"]["app_role"];
 
@@ -26,6 +28,7 @@ const ROLES = ["owner", "admin", "pharmacist", "cashier", "staff"] as const;
 
 function SettingsPage() {
   const { currentTenantId, currentTenant, currentRole, user } = useAuth();
+  const { preference, setPreference, systemPrefersReduced } = useMotion();
   const [members, setMembers] = useState<Member[]>([]);
   const [name, setName] = useState("");
   const [county, setCounty] = useState<string>("");
@@ -79,6 +82,56 @@ function SettingsPage() {
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
         <p className="text-muted-foreground">Manage your organization and team.</p>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Monitor className="h-5 w-5 text-primary" />
+            Motion & Animation
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Reduce or disable animations if you experience motion sensitivity. Your system currently {systemPrefersReduced ? "prefers reduced motion" : "allows full motion"}.
+          </p>
+          <RadioGroup
+            value={preference}
+            onValueChange={(v) => setPreference(v as "full" | "reduced" | "none")}
+            className="grid gap-3"
+          >
+            <div className="flex items-start space-x-3 rounded-lg border p-3 hover:bg-accent/40 transition-colors cursor-pointer">
+              <RadioGroupItem value="full" id="motion-full" />
+              <div className="flex-1">
+                <Label htmlFor="motion-full" className="flex items-center gap-2 cursor-pointer">
+                  <Wind className="h-4 w-4 text-success" />
+                  Full motion
+                </Label>
+                <p className="text-xs text-muted-foreground mt-1">All animations and glassmorphism effects enabled.</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3 rounded-lg border p-3 hover:bg-accent/40 transition-colors cursor-pointer">
+              <RadioGroupItem value="reduced" id="motion-reduced" />
+              <div className="flex-1">
+                <Label htmlFor="motion-reduced" className="flex items-center gap-2 cursor-pointer">
+                  <Wind className="h-4 w-4 text-warning" />
+                  Reduced motion
+                </Label>
+                <p className="text-xs text-muted-foreground mt-1">Disables continuous animations (float, shimmer, glow) and blurs. Keeps simple transitions.</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3 rounded-lg border p-3 hover:bg-accent/40 transition-colors cursor-pointer">
+              <RadioGroupItem value="none" id="motion-none" />
+              <div className="flex-1">
+                <Label htmlFor="motion-none" className="flex items-center gap-2 cursor-pointer">
+                  <Ban className="h-4 w-4 text-destructive" />
+                  No motion
+                </Label>
+                <p className="text-xs text-muted-foreground mt-1">All animations, transitions, and backdrop blur disabled. Maximum accessibility.</p>
+              </div>
+            </div>
+          </RadioGroup>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader><CardTitle>Organization</CardTitle></CardHeader>
