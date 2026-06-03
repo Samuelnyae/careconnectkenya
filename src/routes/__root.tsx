@@ -99,9 +99,11 @@ function RootComponent() {
     }).catch(() => {});
   }, []);
   return (
-    <AuthProvider>
-      <Outlet />
-      <Toaster richColors position="top-right" />
-    </AuthProvider>
+    <MotionProvider>
+      <AuthProvider>
+        <Outlet />
+        <Toaster richColors position="top-right" />
+      </AuthProvider>
+    </MotionProvider>
   );
 }
