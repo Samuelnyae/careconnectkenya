@@ -47,14 +47,14 @@ export function AppSidebar() {
   }, [user]);
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="glass-sidebar">
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--gradient-primary)] shadow-[var(--shadow-glow)]">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--gradient-african)] shadow-[var(--shadow-glow)] animate-glow-pulse">
             <Building2 className="h-5 w-5 text-primary-foreground" />
           </div>
           <div className="min-w-0">
-            <div className="truncate text-sm font-semibold text-sidebar-foreground">
+            <div className="truncate text-sm font-semibold text-sidebar-foreground shimmer-text">
               {currentTenant?.name ?? "Afya Cloud"}
             </div>
             <div className="truncate text-xs text-sidebar-foreground/60">
