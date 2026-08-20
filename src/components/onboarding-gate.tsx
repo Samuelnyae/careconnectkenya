@@ -27,14 +27,8 @@ export function OnboardingGate() {
       setLoading(false);
       return;
     }
-    const { error: mErr } = await supabase
-      .from("memberships")
-      .insert({ user_id: user.id, tenant_id: tenant.id, role: "owner" });
-    if (mErr) {
-      toast.error(mErr.message);
-      setLoading(false);
-      return;
-    }
+    // Owner membership is created automatically by a database trigger.
+
     toast.success("Organization created");
     await refreshMemberships();
     setLoading(false);
