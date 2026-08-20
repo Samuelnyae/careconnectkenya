@@ -2,11 +2,30 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendOnChannels, type Channel } from "@/server/messaging.server";
 
+async function authorize(request: Request): Promise<Response | null> {
+  const provided =
+    request.headers.get("x-cron-secret") ??
+    (request.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
+  if (!provided) return new Response("Unauthorized", { status: 401 });
+
+  const { data, error } = await supabaseAdmin.rpc("verify_cron_token", {
+    _name: "send_reminders",
+    _token: provided,
+  });
+  if (error || data !== true) return new Response("Unauthorized", { status: 401 });
+  return null;
+}
+
 export const Route = createFileRoute("/api/public/hooks/send-reminders")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const denied = await authorize(request);
+        if (denied) return denied;
+
         const now = new Date().toISOString();
+
+
         // Pull pending reminders due now (limit batch).
         const { data: due, error } = await supabaseAdmin
           .from("reminders")
