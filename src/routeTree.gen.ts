@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as PrescriptionsRouteImport } from './routes/prescriptions'
@@ -41,6 +42,11 @@ import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/pu
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RemindersRoute = RemindersRouteImport.update({
@@ -198,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/prescriptions': typeof PrescriptionsRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/prescriptions': typeof PrescriptionsRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/prescriptions': typeof PrescriptionsRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/prescriptions'
     | '/records'
     | '/reminders'
+    | '/reset-password'
     | '/settings'
     | '/admin/admins'
     | '/admin/health'
@@ -319,6 +329,7 @@ export interface FileRouteTypes {
     | '/prescriptions'
     | '/records'
     | '/reminders'
+    | '/reset-password'
     | '/settings'
     | '/admin/admins'
     | '/admin/health'
@@ -349,6 +360,7 @@ export interface FileRouteTypes {
     | '/prescriptions'
     | '/records'
     | '/reminders'
+    | '/reset-password'
     | '/settings'
     | '/admin/admins'
     | '/admin/health'
@@ -380,6 +392,7 @@ export interface RootRouteChildren {
   PrescriptionsRoute: typeof PrescriptionsRoute
   RecordsRoute: typeof RecordsRoute
   RemindersRoute: typeof RemindersRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   ConsultIdRoute: typeof ConsultIdRoute
   RxTokenRoute: typeof RxTokenRoute
@@ -393,6 +406,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reminders': {
@@ -645,6 +665,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrescriptionsRoute: PrescriptionsRoute,
   RecordsRoute: RecordsRoute,
   RemindersRoute: RemindersRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   ConsultIdRoute: ConsultIdRoute,
   RxTokenRoute: RxTokenRoute,
