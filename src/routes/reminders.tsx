@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
-import { sendReminderNow } from "@/server/messaging.functions";
+import { sendReminderNow } from "@/lib/messaging.functions";
 import { Bell, Send, Loader2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 

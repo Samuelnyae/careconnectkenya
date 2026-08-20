@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { sendOnChannels, type Channel } from "./messaging.server";
+import { sendOnChannels, type Channel } from "@/server/messaging.server";
 
 const SendNowSchema = z.object({
   reminderId: z.string().uuid(),

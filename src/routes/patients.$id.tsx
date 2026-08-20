@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useServerFn } from "@tanstack/react-start";
-import { sendQuickMessage } from "@/server/messaging.functions";
+import { sendQuickMessage } from "@/lib/messaging.functions";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Plus, Stethoscope, Pill, AlertTriangle, ShieldCheck, Loader2, MessageSquare, FlaskConical, Bell, Upload, ExternalLink, HeartPulse } from "lucide-react";
