@@ -241,16 +241,39 @@ function AuthPage() {
 
           <div className="my-6 flex items-center gap-3">
             <span className="h-px flex-1 bg-border" />
-            <span className="text-xs text-muted-foreground">Or</span>
+            <span className="text-xs text-muted-foreground">Or continue with</span>
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Button asChild variant="outline" className="h-12 w-full rounded-xl">
-            <Link to="/auth/phone">
-              <Phone className="mr-2 h-4 w-4" />
-              Continue with phone number
-            </Link>
-          </Button>
+          <div className="grid gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy}
+              onClick={() => void oauth("google")}
+              className="h-12 w-full rounded-xl"
+            >
+              <svg className="mr-2 h-4 w-4" viewBox="0 0 48 48" aria-hidden="true">
+                <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2.5 24 .5 14.6.5 6.5 5.9 2.6 13.8l7.8 6.1C12.3 13.8 17.6 9.5 24 9.5z" />
+                <path fill="#4285F4" d="M46.5 24c0-1.6-.1-2.8-.4-4.1H24v8.3h12.8c-.3 2.1-1.7 5.3-4.9 7.4l7.6 5.9c4.5-4.2 7-10.3 7-17.5z" />
+                <path fill="#FBBC05" d="M10.4 28.1a14.6 14.6 0 0 1 0-8.2l-7.8-6.1a23.5 23.5 0 0 0 0 20.4l7.8-6.1z" />
+                <path fill="#34A853" d="M24 47.5c6.2 0 11.5-2 15.5-5.6l-7.6-5.9c-2.1 1.4-4.8 2.4-7.9 2.4-6.4 0-11.7-4.3-13.6-10.3l-7.8 6.1C6.5 42.1 14.6 47.5 24 47.5z" />
+              </svg>
+              Google
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy}
+              onClick={() => void oauth("apple")}
+              className="h-12 w-full rounded-xl"
+            >
+              <svg className="mr-2 h-4 w-4 fill-current" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-36.8-2.8-77 21.3-91.7 21.3-15.6 0-51.2-20.3-79.2-20.3C61.4 141.2 8 184.4 8 272.2c0 26 4.8 52.8 14.3 80.5 12.7 36.4 46.5 122.3 92.8 120.9 24.2-.6 41.3-17.2 72.8-17.2 30.6 0 46.4 17.2 73.4 17.2 46.7-.7 77.3-78.3 89.4-114.8-62.5-29.5-31.9-86.7-32-90.1zM255.3 84.3C278.5 56.8 276.4 31.8 275.7 24c-20.5 1.2-44.2 14-57.7 29.7-14.9 16.9-23.6 37.8-21.7 61.3 22.2 1.7 42.5-9.7 58.9-30.7z" />
+              </svg>
+              Apple
+            </Button>
+          </div>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
             {mode === "login" ? "I don't have an account?" : "I already have an account?"}{" "}
