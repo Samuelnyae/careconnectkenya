@@ -126,6 +126,42 @@ export type Database = {
           },
         ]
       }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          entity: string
+          entity_id: string | null
+          id: string
+          meta: Json | null
+          tenant_id: string
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity: string
+          entity_id?: string | null
+          id?: string
+          meta?: Json | null
+          tenant_id: string
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          meta?: Json | null
+          tenant_id?: string
+        }
+        Relationships: []
+      }
       journal_entries: {
         Row: {
           created_at: string
@@ -407,9 +443,13 @@ export type Database = {
           auth_user_id: string | null
           chronic_conditions: string | null
           chronic_review_date: string | null
+          consent_at: string | null
+          consent_given: boolean
+          consent_method: string | null
           county: string | null
           created_at: string
           created_by: string | null
+          data_retention_until: string | null
           date_of_birth: string | null
           email: string | null
           full_name: string
@@ -433,9 +473,13 @@ export type Database = {
           auth_user_id?: string | null
           chronic_conditions?: string | null
           chronic_review_date?: string | null
+          consent_at?: string | null
+          consent_given?: boolean
+          consent_method?: string | null
           county?: string | null
           created_at?: string
           created_by?: string | null
+          data_retention_until?: string | null
           date_of_birth?: string | null
           email?: string | null
           full_name: string
@@ -459,9 +503,13 @@ export type Database = {
           auth_user_id?: string | null
           chronic_conditions?: string | null
           chronic_review_date?: string | null
+          consent_at?: string | null
+          consent_given?: boolean
+          consent_method?: string | null
           county?: string | null
           created_at?: string
           created_by?: string | null
+          data_retention_until?: string | null
           date_of_birth?: string | null
           email?: string | null
           full_name?: string
