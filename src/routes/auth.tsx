@@ -73,6 +73,20 @@ function AuthPage() {
     toast.success("Password reset link sent");
   };
 
+  const oauth = async (provider: "google" | "apple") => {
+    setBusy(true);
+    const result = await lovable.auth.signInWithOAuth(provider, {
+      redirect_uri: window.location.origin,
+    });
+    if (result.error) {
+      setBusy(false);
+      return toast.error(result.error.message ?? "Sign-in failed");
+    }
+    if (result.redirected) return;
+    setBusy(false);
+  };
+
+
   const fieldClass =
     "h-12 rounded-xl border-border/60 bg-card pl-11 text-sm shadow-sm focus-visible:ring-primary/40";
 
