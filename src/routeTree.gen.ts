@@ -32,7 +32,6 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as RxTokenRouteImport } from './routes/rx.$token'
 import { Route as PatientsIdRouteImport } from './routes/patients.$id'
 import { Route as ConsultIdRouteImport } from './routes/consult.$id'
-import { Route as AuthPhoneRouteImport } from './routes/auth.phone'
 import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
 import { Route as AdminMembersRouteImport } from './routes/admin.members'
 import { Route as AdminHealthRouteImport } from './routes/admin.health'
@@ -154,11 +153,6 @@ const ConsultIdRoute = ConsultIdRouteImport.update({
   path: '/consult/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthPhoneRoute = AuthPhoneRouteImport.update({
-  id: '/phone',
-  path: '/phone',
-  getParentRoute: () => AuthRoute,
-} as any)
 const AdminTenantsRoute = AdminTenantsRouteImport.update({
   id: '/tenants',
   path: '/tenants',
@@ -191,7 +185,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
@@ -210,7 +204,6 @@ export interface FileRoutesByFullPath {
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
   '/admin/tenants': typeof AdminTenantsRoute
-  '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
@@ -221,7 +214,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
@@ -240,7 +233,6 @@ export interface FileRoutesByTo {
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
   '/admin/tenants': typeof AdminTenantsRoute
-  '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
@@ -253,7 +245,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
   '/dashboard': typeof DashboardRoute
@@ -272,7 +264,6 @@ export interface FileRoutesById {
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
   '/admin/tenants': typeof AdminTenantsRoute
-  '/auth/phone': typeof AuthPhoneRoute
   '/consult/$id': typeof ConsultIdRoute
   '/patients/$id': typeof PatientsIdRoute
   '/rx/$token': typeof RxTokenRoute
@@ -305,7 +296,6 @@ export interface FileRouteTypes {
     | '/admin/health'
     | '/admin/members'
     | '/admin/tenants'
-    | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
@@ -335,7 +325,6 @@ export interface FileRouteTypes {
     | '/admin/health'
     | '/admin/members'
     | '/admin/tenants'
-    | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
@@ -366,7 +355,6 @@ export interface FileRouteTypes {
     | '/admin/health'
     | '/admin/members'
     | '/admin/tenants'
-    | '/auth/phone'
     | '/consult/$id'
     | '/patients/$id'
     | '/rx/$token'
@@ -379,7 +367,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
-  AuthRoute: typeof AuthRouteWithChildren
+  AuthRoute: typeof AuthRoute
   BookkeepingRoute: typeof BookkeepingRoute
   ClaimsRoute: typeof ClaimsRoute
   DashboardRoute: typeof DashboardRoute
@@ -562,13 +550,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsultIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/phone': {
-      id: '/auth/phone'
-      path: '/phone'
-      fullPath: '/auth/phone'
-      preLoaderRoute: typeof AuthPhoneRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/admin/tenants': {
       id: '/admin/tenants'
       path: '/tenants'
@@ -625,16 +606,6 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface AuthRouteChildren {
-  AuthPhoneRoute: typeof AuthPhoneRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthPhoneRoute: AuthPhoneRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 interface PatientsRouteChildren {
   PatientsIdRoute: typeof PatientsIdRoute
 }
@@ -652,7 +623,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
-  AuthRoute: AuthRouteWithChildren,
+  AuthRoute: AuthRoute,
   BookkeepingRoute: BookkeepingRoute,
   ClaimsRoute: ClaimsRoute,
   DashboardRoute: DashboardRoute,
