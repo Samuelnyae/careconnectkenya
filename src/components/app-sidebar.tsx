@@ -32,6 +32,7 @@ const items = [
   { title: "Bookkeeping", url: "/bookkeeping", icon: BookOpen },
   { title: "AI Insights", url: "/ai-insights", icon: Sparkles },
   { title: "Disease Trends", url: "/disease-trends", icon: Activity },
+  { title: "Audit Trail", url: "/audit-log", icon: ScrollText },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
