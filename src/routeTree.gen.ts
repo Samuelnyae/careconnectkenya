@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
@@ -39,6 +40,11 @@ import { Route as AdminHealthRouteImport } from './routes/admin.health'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
@@ -237,6 +244,7 @@ export interface FileRoutesByTo {
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
@@ -269,6 +277,7 @@ export interface FileRoutesById {
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/reset-password'
     | '/settings'
+    | '/terms'
     | '/admin/admins'
     | '/admin/health'
     | '/admin/members'
@@ -332,6 +342,7 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/reset-password'
     | '/settings'
+    | '/terms'
     | '/admin/admins'
     | '/admin/health'
     | '/admin/members'
@@ -363,6 +374,7 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/reset-password'
     | '/settings'
+    | '/terms'
     | '/admin/admins'
     | '/admin/health'
     | '/admin/members'
@@ -395,6 +407,7 @@ export interface RootRouteChildren {
   RemindersRoute: typeof RemindersRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
+  TermsRoute: typeof TermsRoute
   ConsultIdRoute: typeof ConsultIdRoute
   RxTokenRoute: typeof RxTokenRoute
   ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
@@ -402,6 +415,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -659,6 +679,7 @@ const rootRouteChildren: RootRouteChildren = {
   RemindersRoute: RemindersRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
+  TermsRoute: TermsRoute,
   ConsultIdRoute: ConsultIdRoute,
   RxTokenRoute: RxTokenRoute,
   ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
