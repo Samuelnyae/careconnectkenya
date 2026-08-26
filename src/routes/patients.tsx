@@ -58,6 +58,7 @@ function PatientsPage() {
 
   const save = async () => {
     if (!currentTenantId || !user || !form.full_name.trim()) return toast.error("Name required");
+    if (!consent) return toast.error("Patient consent is required before storing their record");
     setSaving(true);
     const payload = {
       tenant_id: currentTenantId,
@@ -74,6 +75,8 @@ function PatientsPage() {
       allergies: form.allergies || null,
       chronic_conditions: form.chronic_conditions || null,
       notes: form.notes || null,
+      consent_given: true,
+      consent_method: consentMethod,
     };
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       try {
@@ -86,11 +89,21 @@ function PatientsPage() {
     } else {
       const { error } = await supabase.from("patients").insert(payload);
       if (error) { setSaving(false); return toast.error(error.message); }
+      void logAudit({
+        tenantId: currentTenantId,
+        actorId: user.id,
+        actorEmail: user.email ?? null,
+        action: "patient.create",
+        entity: "patients",
+        meta: { county: county || null, consent_method: consentMethod },
+      });
       toast.success("Patient added");
     }
     setSaving(false);
     setForm({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", sha_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
     setCounty("");
+    setConsent(false);
+    setConsentMethod("verbal");
     setOpen(false);
     void load();
   };
