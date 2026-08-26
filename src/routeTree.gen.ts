@@ -13,6 +13,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as RecordsRouteImport } from './routes/records'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PrescriptionsRouteImport } from './routes/prescriptions'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
@@ -56,6 +57,11 @@ const RemindersRoute = RemindersRouteImport.update({
 const RecordsRoute = RecordsRouteImport.update({
   id: '/records',
   path: '/records',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrescriptionsRoute = PrescriptionsRouteImport.update({
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/privacy': typeof PrivacyRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -225,6 +232,7 @@ export interface FileRoutesByTo {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/privacy': typeof PrivacyRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -256,6 +264,7 @@ export interface FileRoutesById {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/privacy': typeof PrivacyRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -288,6 +297,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/privacy'
     | '/records'
     | '/reminders'
     | '/reset-password'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/privacy'
     | '/records'
     | '/reminders'
     | '/reset-password'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/privacy'
     | '/records'
     | '/reminders'
     | '/reset-password'
@@ -378,6 +390,7 @@ export interface RootRouteChildren {
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
   PrescriptionsRoute: typeof PrescriptionsRoute
+  PrivacyRoute: typeof PrivacyRoute
   RecordsRoute: typeof RecordsRoute
   RemindersRoute: typeof RemindersRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -415,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/records'
       fullPath: '/records'
       preLoaderRoute: typeof RecordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prescriptions': {
@@ -634,6 +654,7 @@ const rootRouteChildren: RootRouteChildren = {
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
   PrescriptionsRoute: PrescriptionsRoute,
+  PrivacyRoute: PrivacyRoute,
   RecordsRoute: RecordsRoute,
   RemindersRoute: RemindersRoute,
   ResetPasswordRoute: ResetPasswordRoute,
