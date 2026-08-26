@@ -26,6 +26,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClaimsRouteImport } from './routes/claims'
 import { Route as BookkeepingRouteImport } from './routes/bookkeeping'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuditLogRouteImport } from './routes/audit-log'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as AiInsightsRouteImport } from './routes/ai-insights'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -125,6 +126,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuditLogRoute = AuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppointmentsRoute = AppointmentsRouteImport.update({
   id: '/appointments',
   path: '/appointments',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
+  '/audit-log': typeof AuditLogRoute
   '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
+  '/audit-log': typeof AuditLogRoute
   '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
@@ -261,6 +269,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
+  '/audit-log': typeof AuditLogRoute
   '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai-insights'
     | '/appointments'
+    | '/audit-log'
     | '/auth'
     | '/bookkeeping'
     | '/claims'
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/'
     | '/ai-insights'
     | '/appointments'
+    | '/audit-log'
     | '/auth'
     | '/bookkeeping'
     | '/claims'
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai-insights'
     | '/appointments'
+    | '/audit-log'
     | '/auth'
     | '/bookkeeping'
     | '/claims'
@@ -391,6 +403,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
+  AuditLogRoute: typeof AuditLogRoute
   AuthRoute: typeof AuthRoute
   BookkeepingRoute: typeof BookkeepingRoute
   ClaimsRoute: typeof ClaimsRoute
@@ -534,6 +547,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audit-log': {
+      id: '/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AuditLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/appointments': {
       id: '/appointments'
       path: '/appointments'
@@ -663,6 +683,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
+  AuditLogRoute: AuditLogRoute,
   AuthRoute: AuthRoute,
   BookkeepingRoute: BookkeepingRoute,
   ClaimsRoute: ClaimsRoute,
