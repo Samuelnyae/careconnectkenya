@@ -154,6 +154,31 @@ function PatientsPage() {
               <div className="sm:col-span-2"><Label>Allergies</Label><Textarea rows={2} value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} placeholder="e.g. penicillin, sulfa" /></div>
               <div className="sm:col-span-2"><Label>Chronic conditions</Label><Textarea rows={2} value={form.chronic_conditions} onChange={(e) => setForm({ ...form, chronic_conditions: e.target.value })} placeholder="e.g. hypertension, diabetes" /></div>
               <div className="sm:col-span-2"><Label>Notes</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
+              <div className="sm:col-span-2 rounded-lg border border-border/60 bg-muted/30 p-3">
+                <div className="flex items-start gap-3">
+                  <Checkbox id="consent" checked={consent} onCheckedChange={(v) => setConsent(v === true)} className="mt-0.5" />
+                  <div className="space-y-1">
+                    <Label htmlFor="consent" className="text-sm font-medium">Patient consent obtained *</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Required by the Kenya Data Protection Act, 2019. Confirm the patient agreed to this facility
+                      storing and processing their health data.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <Label className="text-xs">How was consent given?</Label>
+                  <Select value={consentMethod} onValueChange={setConsentMethod}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="verbal">Verbal (in person)</SelectItem>
+                      <SelectItem value="written">Written / signed form</SelectItem>
+                      <SelectItem value="sms">SMS confirmation</SelectItem>
+                      <SelectItem value="chv">Via community health volunteer</SelectItem>
+                      <SelectItem value="guardian">Guardian / next of kin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
             <Button onClick={() => void save()} disabled={saving} className="mt-2">Save patient</Button>
           </DialogContent>
