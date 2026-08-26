@@ -32,6 +32,8 @@ function PatientsPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ full_name: "", date_of_birth: "", gender: "", phone: "", email: "", national_id: "", sha_number: "", address: "", allergies: "", chronic_conditions: "", notes: "" });
   const [county, setCounty] = useState<string>("");
+  const [consent, setConsent] = useState(false);
+  const [consentMethod, setConsentMethod] = useState<string>("verbal");
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
