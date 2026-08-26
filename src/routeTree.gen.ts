@@ -9,10 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as RecordsRouteImport } from './routes/records'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PrescriptionsRouteImport } from './routes/prescriptions'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as PatientsRouteImport } from './routes/patients'
@@ -24,6 +26,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClaimsRouteImport } from './routes/claims'
 import { Route as BookkeepingRouteImport } from './routes/bookkeeping'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuditLogRouteImport } from './routes/audit-log'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as AiInsightsRouteImport } from './routes/ai-insights'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -38,6 +41,11 @@ import { Route as AdminHealthRouteImport } from './routes/admin.health'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -56,6 +64,11 @@ const RemindersRoute = RemindersRouteImport.update({
 const RecordsRoute = RecordsRouteImport.update({
   id: '/records',
   path: '/records',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrescriptionsRoute = PrescriptionsRouteImport.update({
@@ -111,6 +124,11 @@ const BookkeepingRoute = BookkeepingRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditLogRoute = AuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppointmentsRoute = AppointmentsRouteImport.update({
@@ -185,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
+  '/audit-log': typeof AuditLogRoute
   '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
@@ -196,10 +215,12 @@ export interface FileRoutesByFullPath {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/privacy': typeof PrivacyRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
@@ -214,6 +235,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
+  '/audit-log': typeof AuditLogRoute
   '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
@@ -225,10 +247,12 @@ export interface FileRoutesByTo {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/privacy': typeof PrivacyRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
@@ -245,6 +269,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/ai-insights': typeof AiInsightsRoute
   '/appointments': typeof AppointmentsRoute
+  '/audit-log': typeof AuditLogRoute
   '/auth': typeof AuthRoute
   '/bookkeeping': typeof BookkeepingRoute
   '/claims': typeof ClaimsRoute
@@ -256,10 +281,12 @@ export interface FileRoutesById {
   '/patients': typeof PatientsRouteWithChildren
   '/pos': typeof PosRoute
   '/prescriptions': typeof PrescriptionsRoute
+  '/privacy': typeof PrivacyRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/members': typeof AdminMembersRoute
@@ -277,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai-insights'
     | '/appointments'
+    | '/audit-log'
     | '/auth'
     | '/bookkeeping'
     | '/claims'
@@ -288,10 +316,12 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/privacy'
     | '/records'
     | '/reminders'
     | '/reset-password'
     | '/settings'
+    | '/terms'
     | '/admin/admins'
     | '/admin/health'
     | '/admin/members'
@@ -306,6 +336,7 @@ export interface FileRouteTypes {
     | '/'
     | '/ai-insights'
     | '/appointments'
+    | '/audit-log'
     | '/auth'
     | '/bookkeeping'
     | '/claims'
@@ -317,10 +348,12 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/privacy'
     | '/records'
     | '/reminders'
     | '/reset-password'
     | '/settings'
+    | '/terms'
     | '/admin/admins'
     | '/admin/health'
     | '/admin/members'
@@ -336,6 +369,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai-insights'
     | '/appointments'
+    | '/audit-log'
     | '/auth'
     | '/bookkeeping'
     | '/claims'
@@ -347,10 +381,12 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pos'
     | '/prescriptions'
+    | '/privacy'
     | '/records'
     | '/reminders'
     | '/reset-password'
     | '/settings'
+    | '/terms'
     | '/admin/admins'
     | '/admin/health'
     | '/admin/members'
@@ -367,6 +403,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AiInsightsRoute: typeof AiInsightsRoute
   AppointmentsRoute: typeof AppointmentsRoute
+  AuditLogRoute: typeof AuditLogRoute
   AuthRoute: typeof AuthRoute
   BookkeepingRoute: typeof BookkeepingRoute
   ClaimsRoute: typeof ClaimsRoute
@@ -378,10 +415,12 @@ export interface RootRouteChildren {
   PatientsRoute: typeof PatientsRouteWithChildren
   PosRoute: typeof PosRoute
   PrescriptionsRoute: typeof PrescriptionsRoute
+  PrivacyRoute: typeof PrivacyRoute
   RecordsRoute: typeof RecordsRoute
   RemindersRoute: typeof RemindersRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
+  TermsRoute: typeof TermsRoute
   ConsultIdRoute: typeof ConsultIdRoute
   RxTokenRoute: typeof RxTokenRoute
   ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
@@ -389,6 +428,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -415,6 +461,13 @@ declare module '@tanstack/react-router' {
       path: '/records'
       fullPath: '/records'
       preLoaderRoute: typeof RecordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prescriptions': {
@@ -492,6 +545,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-log': {
+      id: '/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AuditLogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/appointments': {
@@ -623,6 +683,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AiInsightsRoute: AiInsightsRoute,
   AppointmentsRoute: AppointmentsRoute,
+  AuditLogRoute: AuditLogRoute,
   AuthRoute: AuthRoute,
   BookkeepingRoute: BookkeepingRoute,
   ClaimsRoute: ClaimsRoute,
@@ -634,10 +695,12 @@ const rootRouteChildren: RootRouteChildren = {
   PatientsRoute: PatientsRouteWithChildren,
   PosRoute: PosRoute,
   PrescriptionsRoute: PrescriptionsRoute,
+  PrivacyRoute: PrivacyRoute,
   RecordsRoute: RecordsRoute,
   RemindersRoute: RemindersRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
+  TermsRoute: TermsRoute,
   ConsultIdRoute: ConsultIdRoute,
   RxTokenRoute: RxTokenRoute,
   ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
