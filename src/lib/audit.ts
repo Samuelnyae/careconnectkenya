@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 
 export type AuditAction =
   | "patient.view"
@@ -80,7 +81,7 @@ export async function logAudit(args: LogArgs): Promise<void> {
       action: args.action,
       entity: args.entity,
       entity_id: args.entityId ?? null,
-      meta: redactMeta(args.meta),
+      meta: redactMeta(args.meta) as Json,
     });
     if (error) console.warn("audit write failed", error.message);
   } catch (e) {
