@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useServerFn } from "@tanstack/react-start";
 import { sendQuickMessage } from "@/lib/messaging.functions";
 import { useAuth } from "@/lib/auth-context";
+import { logAudit } from "@/lib/audit";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Plus, Stethoscope, Pill, AlertTriangle, ShieldCheck, Loader2, MessageSquare, FlaskConical, Bell, Upload, ExternalLink, HeartPulse } from "lucide-react";
 import { toast } from "sonner";
