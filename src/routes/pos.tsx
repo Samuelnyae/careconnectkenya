@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, Plus, Minus, Trash2, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { enqueue, cacheList, readCache } from "@/lib/offline/db";
+import { cartTotal } from "@/lib/billing";
 
 export const Route = createFileRoute("/pos")({
   component: () => <ProtectedLayout><POSPage /></ProtectedLayout>,
