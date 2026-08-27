@@ -239,8 +239,14 @@ function AuthPage() {
               <label className="flex items-start gap-2 text-xs text-muted-foreground">
                 <Checkbox checked={agree} onCheckedChange={(v) => setAgree(Boolean(v))} className="mt-0.5" />
                 <span>
-                  I agree to the <span className="font-semibold text-primary">Terms of Services</span> and{" "}
-                  <span className="font-semibold text-primary">Privacy Policy</span>
+                  I agree to the{" "}
+                  <Link to="/terms" target="_blank" className="font-semibold text-primary underline-offset-4 hover:underline">
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy" target="_blank" className="font-semibold text-primary underline-offset-4 hover:underline">
+                    Privacy Policy
+                  </Link>
                 </span>
               </label>
             )}

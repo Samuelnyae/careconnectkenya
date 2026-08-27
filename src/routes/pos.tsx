@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, Plus, Minus, Trash2, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { enqueue, cacheList, readCache } from "@/lib/offline/db";
+import { cartTotal } from "@/lib/billing";
 
 export const Route = createFileRoute("/pos")({
   component: () => <ProtectedLayout><POSPage /></ProtectedLayout>,
@@ -71,7 +72,7 @@ function POSPage() {
   };
   const removeLine = (id: string) => setCart((c) => c.filter((l) => l.product.id !== id));
 
-  const total = cart.reduce((s, l) => s + l.qty * Number(l.product.unit_price), 0);
+  const total = cartTotal(cart.map((l) => ({ qty: l.qty, unitPrice: l.product.unit_price })));
 
   const checkout = async (method: "cash" | "mpesa" | "card") => {
     if (!currentTenantId || !user || cart.length === 0) return;

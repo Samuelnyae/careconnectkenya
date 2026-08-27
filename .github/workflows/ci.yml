@@ -24,6 +24,8 @@ jobs:
         run: bun run lint || echo "lint script not defined; skipping"
       - name: Typecheck
         run: bunx tsc --noEmit
+      - name: Unit tests
+        run: bun run test
       - name: Build
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
