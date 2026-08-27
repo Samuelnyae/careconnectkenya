@@ -76,6 +76,19 @@ function PatientDetail() {
   }, [id]);
   useEffect(() => { void load(); }, [load]);
 
+  // Kenya DPA 2019: every access to a patient record is recorded.
+  useEffect(() => {
+    if (!currentTenantId || !user || !id) return;
+    void logAudit({
+      tenantId: currentTenantId,
+      actorId: user.id,
+      actorEmail: user.email ?? null,
+      action: "patient.view",
+      entity: "patients",
+      entityId: id,
+    });
+  }, [currentTenantId, user, id]);
+
   const updatePatient = async (patch: Record<string, unknown>) => {
     if (!patient) return;
     const { error } = await supabase.from("patients").update(patch as never).eq("id", patient.id);
