@@ -71,7 +71,7 @@ function POSPage() {
   };
   const removeLine = (id: string) => setCart((c) => c.filter((l) => l.product.id !== id));
 
-  const total = cart.reduce((s, l) => s + l.qty * Number(l.product.unit_price), 0);
+  const total = cartTotal(cart.map((l) => ({ qty: l.qty, unitPrice: l.product.unit_price })));
 
   const checkout = async (method: "cash" | "mpesa" | "card") => {
     if (!currentTenantId || !user || cart.length === 0) return;
