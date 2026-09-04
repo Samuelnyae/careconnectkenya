@@ -1,191 +1,361 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ProtectedLayout } from "@/components/protected-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, AlertTriangle, Clock } from "lucide-react";
+import {
+  Plus, AlertTriangle, Clock, Search, ScanLine, Package, Boxes, Wallet, Ban,
+} from "lucide-react";
 import { toast } from "sonner";
+import {
+  EXPIRY_LABEL, canManageInventory, expiryStatus, stockCost, stockStatus, stockValue,
+  type MovementType,
+} from "@/lib/inventory";
+import { ProductDialog } from "@/components/inventory/product-dialog";
+import { ProductDetailSheet } from "@/components/inventory/product-detail-sheet";
+import { StockMoveDialog } from "@/components/inventory/stock-move-dialog";
+import { SuppliersTab } from "@/components/inventory/suppliers-tab";
+import { PurchasingTab } from "@/components/inventory/purchasing-tab";
+import { StockTakeTab } from "@/components/inventory/stock-take-tab";
+import { ExpiryTab } from "@/components/inventory/expiry-tab";
+import { MovementsTab } from "@/components/inventory/movements-tab";
+import { ReportsTab } from "@/components/inventory/reports-tab";
+import type { Batch, Product, Supplier } from "@/components/inventory/types";
 
 export const Route = createFileRoute("/inventory")({
+  head: () => ({
+    meta: [
+      { title: "Inventory & Pharmacy Stock Control | CareConnect" },
+      { name: "description", content: "Manage products, batches, suppliers, purchase orders, stock takes and expiry across your health facility." },
+      { property: "og:title", content: "Inventory & Pharmacy Stock Control" },
+      { property: "og:description", content: "Batch-level stock control, expiry alerts, purchasing and audit history for Kenyan health facilities." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: () => <ProtectedLayout><InventoryPage /></ProtectedLayout>,
 });
 
-type Product = {
-  id: string; name: string; sku: string | null; barcode: string | null; category: string | null;
-  unit_price: number; cost_price: number; stock_qty: number; reorder_level: number;
-  batch_number: string | null; expiry_date: string | null; supplier: string | null;
-  image_url: string | null;
-};
-
 function InventoryPage() {
-  const { currentTenantId } = useAuth();
-  const [items, setItems] = useState<Product[]>([]);
-  const [open, setOpen] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({
-    name: "", sku: "", barcode: "", category: "", unit_price: "", cost_price: "",
-    stock_qty: "", reorder_level: "10", batch_number: "", expiry_date: "", supplier: "",
-    image_url: "",
-  });
+  const { currentTenantId, currentRole, user } = useAuth();
+  const canManage = canManageInventory(currentRole);
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [batches, setBatches] = useState<Batch[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const [q, setQ] = useState("");
+  const [category, setCategory] = useState("all");
+  const [stockFilter, setStockFilter] = useState("all");
+  const [expiryFilter, setExpiryFilter] = useState("all");
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Product | null>(null);
+  const [selected, setSelected] = useState<Product | null>(null);
+  const [moveType, setMoveType] = useState<MovementType>("stock_in");
+  const [moveOpen, setMoveOpen] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     if (!currentTenantId) return;
-    const { data } = await supabase.from("products").select("*").eq("tenant_id", currentTenantId).order("name");
-    setItems((data ?? []) as Product[]);
+    const [p, s, b] = await Promise.all([
+      supabase.from("products").select("*").eq("tenant_id", currentTenantId).order("name"),
+      supabase.from("suppliers").select("*").eq("tenant_id", currentTenantId).order("name"),
+      supabase.from("product_batches").select("*").eq("tenant_id", currentTenantId).gt("quantity", 0),
+    ]);
+    setProducts((p.data ?? []) as Product[]);
+    setSuppliers((s.data ?? []) as Supplier[]);
+    setBatches((b.data ?? []) as Batch[]);
   }, [currentTenantId]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { void load(); }, [load, refreshKey]);
 
-  const save = async () => {
-    if (!currentTenantId || !form.name.trim()) return;
-    const { error } = await supabase.from("products").insert({
-      tenant_id: currentTenantId,
-      name: form.name.trim(),
-      sku: form.sku || null,
-      barcode: form.barcode || null,
-      category: form.category || null,
-      unit_price: Number(form.unit_price) || 0,
-      cost_price: Number(form.cost_price) || 0,
-      stock_qty: Number(form.stock_qty) || 0,
-      reorder_level: Number(form.reorder_level) || 10,
-      batch_number: form.batch_number || null,
-      expiry_date: form.expiry_date || null,
-      supplier: form.supplier || null,
-      image_url: form.image_url || null,
-    });
-    if (error) return toast.error(error.message);
-    toast.success("Product added");
-    setOpen(false);
-    setForm({ name: "", sku: "", barcode: "", category: "", unit_price: "", cost_price: "", stock_qty: "", reorder_level: "10", batch_number: "", expiry_date: "", supplier: "", image_url: "" });
-    void load();
-  };
+  const refresh = () => { setRefreshKey((k) => k + 1); };
 
-  const onUpload = async (file: File) => {
-    if (!currentTenantId) return;
-    setUploading(true);
-    const ext = file.name.split(".").pop() || "jpg";
-    const path = `${currentTenantId}/${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage.from("product-images").upload(path, file, { upsert: false });
-    if (error) {
-      toast.error(error.message);
-      setUploading(false);
-      return;
+  // Keep the open detail sheet in sync with reloaded data
+  useEffect(() => {
+    if (!selected) return;
+    const fresh = products.find((p) => p.id === selected.id);
+    if (fresh && fresh.stock_qty !== selected.stock_qty) setSelected(fresh);
+  }, [products, selected]);
+
+  const categories = useMemo(
+    () => [...new Set(products.map((p) => p.category).filter(Boolean) as string[])].sort(),
+    [products],
+  );
+
+  const productExpiry = useCallback((p: Product) => {
+    const dates = batches.filter((b) => b.product_id === p.id).map((b) => b.expiry_date).filter(Boolean) as string[];
+    if (dates.length === 0) return p.expiry_date ?? null;
+    return dates.sort()[0] ?? null;
+  }, [batches]);
+
+  const filtered = useMemo(() => products.filter((p) => {
+    const s = q.toLowerCase().trim();
+    if (s && !(
+      p.name.toLowerCase().includes(s)
+      || (p.sku ?? "").toLowerCase().includes(s)
+      || (p.barcode ?? "").toLowerCase().includes(s)
+      || (p.category ?? "").toLowerCase().includes(s)
+      || (p.manufacturer ?? "").toLowerCase().includes(s)
+    )) return false;
+    if (category !== "all" && (p.category ?? "") !== category) return false;
+    if (stockFilter !== "all" && stockStatus(p.stock_qty, p.reorder_level) !== stockFilter) return false;
+    if (expiryFilter !== "all") {
+      const es = expiryStatus(productExpiry(p));
+      if (expiryFilter === "at_risk" ? !["expired", "critical", "soon"].includes(es) : es !== expiryFilter) return false;
     }
-    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
-    setForm((f) => ({ ...f, image_url: data.publicUrl }));
-    setUploading(false);
-    toast.success("Image uploaded");
+    return true;
+  }), [products, q, category, stockFilter, expiryFilter, productExpiry]);
+
+  const kpis = useMemo(() => {
+    const low = products.filter((p) => stockStatus(p.stock_qty, p.reorder_level) === "low").length;
+    const out = products.filter((p) => stockStatus(p.stock_qty, p.reorder_level) === "out").length;
+    const expired = batches.filter((b) => expiryStatus(b.expiry_date) === "expired").length;
+    const expiring = batches.filter((b) => ["critical", "soon"].includes(expiryStatus(b.expiry_date))).length;
+    return { low, out, expired, expiring, retail: stockValue(products), cost: stockCost(products) };
+  }, [products, batches]);
+
+  // Barcode scanner: hardware scanners type fast then press Enter into the search box
+  const onScanToggle = () => {
+    setScanning((v) => !v);
+    setTimeout(() => searchRef.current?.focus(), 50);
+  };
+  const onSearchKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter") return;
+    const code = q.trim();
+    if (!code) return;
+    const hit = products.find((p) => p.barcode === code || p.sku === code);
+    if (hit) { setSelected(hit); setQ(""); }
+    else toast.error(`No product matches ${code}`);
   };
 
-  const statusBadge = (p: Product) => {
-    if (p.stock_qty === 0) return <Badge variant="destructive">Out of stock</Badge>;
-    if (p.stock_qty <= p.reorder_level) return <Badge className="bg-warning text-warning-foreground hover:bg-warning/90"><AlertTriangle className="mr-1 h-3 w-3" />Low</Badge>;
-    if (p.expiry_date) {
-      const days = Math.ceil((new Date(p.expiry_date).getTime() - Date.now()) / 86400000);
-      if (days <= 60) return <Badge className="bg-warning text-warning-foreground hover:bg-warning/90"><Clock className="mr-1 h-3 w-3" />Expiring</Badge>;
-    }
-    return <Badge className="bg-success text-success-foreground hover:bg-success/90">OK</Badge>;
-  };
+  const openMove = (type: MovementType) => { setMoveType(type); setMoveOpen(true); };
+
+  if (!currentTenantId || !user) return null;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
-          <p className="text-muted-foreground">Track stock, batches, and expiry dates.</p>
+          <p className="text-muted-foreground">Products, batches, purchasing, stock takes and expiry control.</p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button className="w-full sm:w-auto bg-[#0a3d2e] text-white hover:bg-[#0a3d2e]/90 shadow-[var(--shadow-glow)]"><Plus className="mr-2 h-4 w-4" />Add product</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader><DialogTitle>Add product</DialogTitle></DialogHeader>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="sm:col-span-2 space-y-2">
-                <Label>Product image</Label>
-                <div className="flex items-center gap-3">
-                  {form.image_url ? (
-                    <img src={form.image_url} alt="preview" className="h-16 w-16 rounded-md object-cover border" />
-                  ) : (
-                    <div className="h-16 w-16 rounded-md border border-dashed flex items-center justify-center text-xs text-muted-foreground">No image</div>
-                  )}
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    disabled={uploading}
-                    onChange={(e) => { const f = e.target.files?.[0]; if (f) void onUpload(f); }}
-                    className="cursor-pointer"
-                  />
-                </div>
-                {uploading && <p className="text-xs text-muted-foreground">Uploading…</p>}
-              </div>
-              <div className="sm:col-span-2 space-y-1"><Label>Name *</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-              <div className="space-y-1"><Label>SKU</Label><Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Barcode</Label><Input value={form.barcode} onChange={(e) => setForm({ ...form, barcode: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Category</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Supplier</Label><Input value={form.supplier} onChange={(e) => setForm({ ...form, supplier: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Unit price (KSh)</Label><Input type="number" value={form.unit_price} onChange={(e) => setForm({ ...form, unit_price: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Cost price (KSh)</Label><Input type="number" value={form.cost_price} onChange={(e) => setForm({ ...form, cost_price: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Stock qty</Label><Input type="number" value={form.stock_qty} onChange={(e) => setForm({ ...form, stock_qty: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Reorder level</Label><Input type="number" value={form.reorder_level} onChange={(e) => setForm({ ...form, reorder_level: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Batch number</Label><Input value={form.batch_number} onChange={(e) => setForm({ ...form, batch_number: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Expiry date</Label><Input type="date" value={form.expiry_date} onChange={(e) => setForm({ ...form, expiry_date: e.target.value })} /></div>
-            </div>
-            <DialogFooter><Button onClick={() => void save()} disabled={!form.name.trim()}>Save product</Button></DialogFooter>
-          </DialogContent>
-        </Dialog>
+        {canManage ? (
+          <Button className="w-full sm:w-auto" onClick={() => { setEditing(null); setDialogOpen(true); }}>
+            <Plus className="mr-2 h-4 w-4" />Add product
+          </Button>
+        ) : (
+          <Badge variant="outline" className="w-fit">Read-only — inventory changes need pharmacist or admin role</Badge>
+        )}
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>All products ({items.length})</CardTitle></CardHeader>
-        <CardContent>
-          {items.length === 0 ? (
-            <div className="py-12 text-center text-sm text-muted-foreground">No products yet. Click "Add product" to start.</div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead><TableHead>Category</TableHead><TableHead>Price</TableHead>
-                    <TableHead>Stock</TableHead><TableHead>Expiry</TableHead><TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {items.map((p) => (
-                    <TableRow key={p.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          {p.image_url ? (
-                            <img src={p.image_url} alt={p.name} className="h-10 w-10 rounded object-cover border" />
-                          ) : (
-                            <div className="h-10 w-10 rounded border bg-muted" />
-                          )}
-                          <div>
-                            <div className="font-medium">{p.name}</div>
-                            {p.batch_number && <div className="text-xs text-muted-foreground">Batch {p.batch_number}</div>}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">{p.category ?? "—"}</TableCell>
-                      <TableCell>KSh {Number(p.unit_price).toLocaleString()}</TableCell>
-                      <TableCell>{p.stock_qty}</TableCell>
-                      <TableCell className="text-muted-foreground">{p.expiry_date ?? "—"}</TableCell>
-                      <TableCell>{statusBadge(p)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard icon={<Package className="h-4 w-4" />} label="Products" value={String(products.length)} hint={`${batches.length} active batches`} />
+        <KpiCard icon={<Wallet className="h-4 w-4" />} label="Stock value (retail)" value={`KSh ${kpis.retail.toLocaleString()}`} hint={`Cost KSh ${kpis.cost.toLocaleString()}`} />
+        <KpiCard icon={<AlertTriangle className="h-4 w-4" />} label="Low / out of stock" value={`${kpis.low} / ${kpis.out}`} hint="Needs reordering" tone="warning" />
+        <KpiCard icon={<Clock className="h-4 w-4" />} label="Expiring / expired" value={`${kpis.expiring} / ${kpis.expired}`} hint="Batches by expiry date" tone="destructive" />
+      </div>
+
+      <Tabs defaultValue="products">
+        <div className="overflow-x-auto">
+          <TabsList>
+            <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="expiry">Expiry</TabsTrigger>
+            <TabsTrigger value="purchasing">Purchasing</TabsTrigger>
+            <TabsTrigger value="suppliers">Suppliers</TabsTrigger>
+            <TabsTrigger value="stocktake">Stock take</TabsTrigger>
+            <TabsTrigger value="history">Audit history</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="products" className="pt-4">
+          <Card>
+            <CardHeader className="gap-3">
+              <CardTitle>All products ({filtered.length})</CardTitle>
+              <div className="grid gap-2 lg:grid-cols-[1fr_auto_auto_auto]">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    ref={searchRef}
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    onKeyDown={onSearchKey}
+                    placeholder={scanning ? "Scan barcode now…" : "Search name, SKU, barcode, manufacturer…"}
+                    className="pl-9"
+                  />
+                </div>
+                <Button variant={scanning ? "default" : "outline"} onClick={onScanToggle}>
+                  <ScanLine className="mr-2 h-4 w-4" />{scanning ? "Scanning" : "Scan"}
+                </Button>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="lg:w-44"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All categories</SelectItem>
+                    {categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <div className="grid grid-cols-2 gap-2">
+                  <Select value={stockFilter} onValueChange={setStockFilter}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Any stock</SelectItem>
+                      <SelectItem value="ok">In stock</SelectItem>
+                      <SelectItem value="low">Low stock</SelectItem>
+                      <SelectItem value="out">Out of stock</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={expiryFilter} onValueChange={setExpiryFilter}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Any expiry</SelectItem>
+                      <SelectItem value="at_risk">At risk</SelectItem>
+                      <SelectItem value="expired">Expired</SelectItem>
+                      <SelectItem value="critical">≤30 days</SelectItem>
+                      <SelectItem value="soon">≤90 days</SelectItem>
+                      <SelectItem value="ok">In date</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {products.length === 0 ? (
+                <div className="py-12 text-center text-sm text-muted-foreground">No products yet. Click "Add product" to start.</div>
+              ) : filtered.length === 0 ? (
+                <div className="py-12 text-center text-sm text-muted-foreground">No products match these filters.</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead><TableHead>Category</TableHead><TableHead>Price</TableHead>
+                        <TableHead>Stock</TableHead><TableHead>Earliest expiry</TableHead><TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filtered.map((p) => {
+                        const exp = productExpiry(p);
+                        const ss = stockStatus(p.stock_qty, p.reorder_level);
+                        const es = expiryStatus(exp);
+                        return (
+                          <TableRow key={p.id} className="cursor-pointer" onClick={() => setSelected(p)}>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                {p.image_url ? (
+                                  <img src={p.image_url} alt={p.name} className="h-10 w-10 rounded object-cover border" loading="lazy" />
+                                ) : (
+                                  <div className="h-10 w-10 rounded border bg-muted" />
+                                )}
+                                <div>
+                                  <div className="font-medium">{p.name}</div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {[p.strength, p.dosage_form, p.sku].filter(Boolean).join(" · ") || "—"}
+                                  </div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-muted-foreground">{p.category ?? "—"}</TableCell>
+                            <TableCell>KSh {Number(p.unit_price).toLocaleString()}</TableCell>
+                            <TableCell>{p.stock_qty}</TableCell>
+                            <TableCell className="text-muted-foreground">{exp ?? "—"}</TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-1">
+                                {ss === "out" && <Badge variant="destructive"><Ban className="mr-1 h-3 w-3" />Out</Badge>}
+                                {ss === "low" && <Badge className="bg-warning text-warning-foreground hover:bg-warning/90"><AlertTriangle className="mr-1 h-3 w-3" />Low</Badge>}
+                                {ss === "ok" && <Badge className="bg-success text-success-foreground hover:bg-success/90">OK</Badge>}
+                                {es === "expired" && <Badge variant="destructive">Expired</Badge>}
+                                {(es === "critical" || es === "soon") && (
+                                  <Badge className="bg-warning text-warning-foreground hover:bg-warning/90"><Clock className="mr-1 h-3 w-3" />{EXPIRY_LABEL[es]}</Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="expiry" className="pt-4">
+          <ExpiryTab tenantId={currentTenantId} userId={user.id} products={products} canManage={canManage} onChanged={refresh} refreshKey={refreshKey} />
+        </TabsContent>
+        <TabsContent value="purchasing" className="pt-4">
+          <PurchasingTab tenantId={currentTenantId} userId={user.id} products={products} suppliers={suppliers} canManage={canManage} onChanged={refresh} refreshKey={refreshKey} />
+        </TabsContent>
+        <TabsContent value="suppliers" className="pt-4">
+          <SuppliersTab tenantId={currentTenantId} suppliers={suppliers} canManage={canManage} onChanged={refresh} />
+        </TabsContent>
+        <TabsContent value="stocktake" className="pt-4">
+          <StockTakeTab tenantId={currentTenantId} userId={user.id} products={products} canManage={canManage} onChanged={refresh} refreshKey={refreshKey} />
+        </TabsContent>
+        <TabsContent value="history" className="pt-4">
+          <MovementsTab tenantId={currentTenantId} products={products} refreshKey={refreshKey} />
+        </TabsContent>
+        <TabsContent value="reports" className="pt-4">
+          <ReportsTab products={products} />
+        </TabsContent>
+      </Tabs>
+
+      <ProductDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        tenantId={currentTenantId}
+        product={editing}
+        suppliers={suppliers}
+        categories={categories}
+        onSaved={() => { refresh(); }}
+      />
+
+      <ProductDetailSheet
+        product={selected}
+        onOpenChange={(v) => { if (!v) setSelected(null); }}
+        tenantId={currentTenantId}
+        canManage={canManage}
+        onEdit={() => { setEditing(selected); setDialogOpen(true); }}
+        onMove={openMove}
+        refreshKey={refreshKey}
+      />
+
+      <StockMoveDialog
+        open={moveOpen}
+        onOpenChange={setMoveOpen}
+        tenantId={currentTenantId}
+        userId={user.id}
+        product={selected}
+        type={moveType}
+        suppliers={suppliers}
+        onDone={refresh}
+      />
     </div>
+  );
+}
+
+function KpiCard({ icon, label, value, hint, tone }: {
+  icon: React.ReactNode; label: string; value: string; hint: string; tone?: "warning" | "destructive";
+}) {
+  const toneClass = tone === "warning" ? "text-warning" : tone === "destructive" ? "text-destructive" : "text-primary";
+  return (
+    <Card>
+      <CardContent className="pt-6">
+        <div className={`flex items-center gap-2 text-xs uppercase tracking-wide ${toneClass}`}>{icon}{label}</div>
+        <div className="mt-2 text-2xl font-bold">{value}</div>
+        <div className="text-xs text-muted-foreground">{hint}</div>
+      </CardContent>
+    </Card>
   );
 }
