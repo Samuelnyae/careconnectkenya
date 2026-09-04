@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  Plus, AlertTriangle, Clock, Search, ScanLine, Package, Boxes, Wallet, Ban,
+  Plus, AlertTriangle, Clock, Search, ScanLine, Package, Wallet, Ban,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -317,7 +317,6 @@ function InventoryPage() {
         tenantId={currentTenantId}
         product={editing}
         suppliers={suppliers}
-        categories={categories}
         onSaved={() => { refresh(); }}
       />
 
