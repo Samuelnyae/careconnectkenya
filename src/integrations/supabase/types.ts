@@ -383,6 +383,457 @@ export type Database = {
           },
         ]
       }
+      patient_allergies: {
+        Row: {
+          allergy_type: string
+          created_at: string
+          created_by: string | null
+          id: string
+          identified_on: string | null
+          notes: string | null
+          patient_id: string
+          reaction: string | null
+          severity: string
+          substance: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          allergy_type?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          identified_on?: string | null
+          notes?: string | null
+          patient_id: string
+          reaction?: string | null
+          severity?: string
+          substance: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          allergy_type?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          identified_on?: string | null
+          notes?: string | null
+          patient_id?: string
+          reaction?: string | null
+          severity?: string
+          substance?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_allergies_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_allergies_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_diagnoses: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          diagnosed_on: string
+          icd10_code: string | null
+          id: string
+          notes: string | null
+          patient_id: string
+          provider: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+          visit_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          diagnosed_on?: string
+          icd10_code?: string | null
+          id?: string
+          notes?: string | null
+          patient_id: string
+          provider?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          diagnosed_on?: string
+          icd10_code?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          provider?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_diagnoses_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_diagnoses_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_diagnoses_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "patient_visits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_documents: {
+        Row: {
+          created_at: string
+          description: string | null
+          doc_type: string
+          file_path: string
+          id: string
+          name: string
+          patient_id: string
+          tenant_id: string
+          uploaded_by: string | null
+          visit_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          doc_type?: string
+          file_path: string
+          id?: string
+          name: string
+          patient_id: string
+          tenant_id: string
+          uploaded_by?: string | null
+          visit_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          doc_type?: string
+          file_path?: string
+          id?: string
+          name?: string
+          patient_id?: string
+          tenant_id?: string
+          uploaded_by?: string | null
+          visit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_documents_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_documents_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "patient_visits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_followups: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          due_on: string
+          id: string
+          notes: string | null
+          patient_id: string
+          provider: string | null
+          reason: string
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          due_on: string
+          id?: string
+          notes?: string | null
+          patient_id: string
+          provider?: string | null
+          reason: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          due_on?: string
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          provider?: string | null
+          reason?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_followups_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_followups_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_history: {
+        Row: {
+          condition: string
+          created_at: string
+          created_by: string | null
+          details: string | null
+          history_type: string
+          id: string
+          occurred_on: string | null
+          patient_id: string
+          provider: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          condition: string
+          created_at?: string
+          created_by?: string | null
+          details?: string | null
+          history_type?: string
+          id?: string
+          occurred_on?: string | null
+          patient_id: string
+          provider?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          condition?: string
+          created_at?: string
+          created_by?: string | null
+          details?: string | null
+          history_type?: string
+          id?: string
+          occurred_on?: string | null
+          patient_id?: string
+          provider?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_history_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_history_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_immunizations: {
+        Row: {
+          administered_on: string
+          batch_number: string | null
+          created_at: string
+          created_by: string | null
+          dose_label: string | null
+          id: string
+          location: string | null
+          manufacturer: string | null
+          next_dose_on: string | null
+          notes: string | null
+          patient_id: string
+          provider: string | null
+          tenant_id: string
+          vaccine: string
+        }
+        Insert: {
+          administered_on?: string
+          batch_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          dose_label?: string | null
+          id?: string
+          location?: string | null
+          manufacturer?: string | null
+          next_dose_on?: string | null
+          notes?: string | null
+          patient_id: string
+          provider?: string | null
+          tenant_id: string
+          vaccine: string
+        }
+        Update: {
+          administered_on?: string
+          batch_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          dose_label?: string | null
+          id?: string
+          location?: string | null
+          manufacturer?: string | null
+          next_dose_on?: string | null
+          notes?: string | null
+          patient_id?: string
+          provider?: string | null
+          tenant_id?: string
+          vaccine?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_immunizations_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_immunizations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_queue: {
+        Row: {
+          appointment_id: string | null
+          arrived_at: string
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          department: string | null
+          id: string
+          patient_id: string
+          priority: string
+          reason: string | null
+          stage: string
+          tenant_id: string
+          updated_at: string
+          visit_id: string | null
+        }
+        Insert: {
+          appointment_id?: string | null
+          arrived_at?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          id?: string
+          patient_id: string
+          priority?: string
+          reason?: string | null
+          stage?: string
+          tenant_id: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Update: {
+          appointment_id?: string | null
+          arrived_at?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          id?: string
+          patient_id?: string
+          priority?: string
+          reason?: string | null
+          stage?: string
+          tenant_id?: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_queue_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_queue_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_queue_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_queue_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "patient_visits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       patient_visits: {
         Row: {
           attended_by: string | null
@@ -436,13 +887,103 @@ export type Database = {
           },
         ]
       }
+      patient_vitals: {
+        Row: {
+          blood_glucose: number | null
+          bmi: number | null
+          created_at: string
+          diastolic: number | null
+          height_cm: number | null
+          id: string
+          notes: string | null
+          pain_score: number | null
+          patient_id: string
+          pulse: number | null
+          recorded_at: string
+          recorded_by: string | null
+          respiratory_rate: number | null
+          spo2: number | null
+          systolic: number | null
+          temperature: number | null
+          tenant_id: string
+          visit_id: string | null
+          weight_kg: number | null
+        }
+        Insert: {
+          blood_glucose?: number | null
+          bmi?: number | null
+          created_at?: string
+          diastolic?: number | null
+          height_cm?: number | null
+          id?: string
+          notes?: string | null
+          pain_score?: number | null
+          patient_id: string
+          pulse?: number | null
+          recorded_at?: string
+          recorded_by?: string | null
+          respiratory_rate?: number | null
+          spo2?: number | null
+          systolic?: number | null
+          temperature?: number | null
+          tenant_id: string
+          visit_id?: string | null
+          weight_kg?: number | null
+        }
+        Update: {
+          blood_glucose?: number | null
+          bmi?: number | null
+          created_at?: string
+          diastolic?: number | null
+          height_cm?: number | null
+          id?: string
+          notes?: string | null
+          pain_score?: number | null
+          patient_id?: string
+          pulse?: number | null
+          recorded_at?: string
+          recorded_by?: string | null
+          respiratory_rate?: number | null
+          spo2?: number | null
+          systolic?: number | null
+          temperature?: number | null
+          tenant_id?: string
+          visit_id?: string | null
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_vitals_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_vitals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_vitals_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "patient_visits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       patients: {
         Row: {
           address: string | null
           allergies: string | null
+          alt_phone: string | null
           auth_user_id: string | null
           chronic_conditions: string | null
           chronic_review_date: string | null
+          city: string | null
           consent_at: string | null
           consent_given: boolean
           consent_method: string | null
@@ -452,16 +993,43 @@ export type Database = {
           data_retention_until: string | null
           date_of_birth: string | null
           email: string | null
+          emergency_address: string | null
+          emergency_alt_phone: string | null
+          emergency_name: string | null
+          emergency_phone: string | null
+          emergency_relationship: string | null
+          first_name: string | null
           full_name: string
           gender: string | null
           id: string
+          id_type: string | null
+          insurance_expiry: string | null
+          insurance_member_number: string | null
+          insurance_policy_number: string | null
+          insurance_principal: string | null
+          insurance_provider: string | null
+          insurance_relationship: string | null
+          insurance_scheme: string | null
+          insurance_verified: boolean
           is_chronic: boolean
+          last_name: string | null
+          last_visit_at: string | null
+          marital_status: string | null
+          middle_name: string | null
+          mrn: string | null
           national_id: string | null
+          nationality: string | null
           notes: string | null
+          occupation: string | null
           phone: string | null
+          photo_url: string | null
+          postal_address: string | null
           preferred_channels: string[]
+          preferred_name: string | null
           registered_via: string | null
           sha_number: string | null
+          status: string
+          tags: string[]
           telegram_chat_id: string | null
           tenant_id: string
           updated_at: string
@@ -470,9 +1038,11 @@ export type Database = {
         Insert: {
           address?: string | null
           allergies?: string | null
+          alt_phone?: string | null
           auth_user_id?: string | null
           chronic_conditions?: string | null
           chronic_review_date?: string | null
+          city?: string | null
           consent_at?: string | null
           consent_given?: boolean
           consent_method?: string | null
@@ -482,16 +1052,43 @@ export type Database = {
           data_retention_until?: string | null
           date_of_birth?: string | null
           email?: string | null
+          emergency_address?: string | null
+          emergency_alt_phone?: string | null
+          emergency_name?: string | null
+          emergency_phone?: string | null
+          emergency_relationship?: string | null
+          first_name?: string | null
           full_name: string
           gender?: string | null
           id?: string
+          id_type?: string | null
+          insurance_expiry?: string | null
+          insurance_member_number?: string | null
+          insurance_policy_number?: string | null
+          insurance_principal?: string | null
+          insurance_provider?: string | null
+          insurance_relationship?: string | null
+          insurance_scheme?: string | null
+          insurance_verified?: boolean
           is_chronic?: boolean
+          last_name?: string | null
+          last_visit_at?: string | null
+          marital_status?: string | null
+          middle_name?: string | null
+          mrn?: string | null
           national_id?: string | null
+          nationality?: string | null
           notes?: string | null
+          occupation?: string | null
           phone?: string | null
+          photo_url?: string | null
+          postal_address?: string | null
           preferred_channels?: string[]
+          preferred_name?: string | null
           registered_via?: string | null
           sha_number?: string | null
+          status?: string
+          tags?: string[]
           telegram_chat_id?: string | null
           tenant_id: string
           updated_at?: string
@@ -500,9 +1097,11 @@ export type Database = {
         Update: {
           address?: string | null
           allergies?: string | null
+          alt_phone?: string | null
           auth_user_id?: string | null
           chronic_conditions?: string | null
           chronic_review_date?: string | null
+          city?: string | null
           consent_at?: string | null
           consent_given?: boolean
           consent_method?: string | null
@@ -512,16 +1111,43 @@ export type Database = {
           data_retention_until?: string | null
           date_of_birth?: string | null
           email?: string | null
+          emergency_address?: string | null
+          emergency_alt_phone?: string | null
+          emergency_name?: string | null
+          emergency_phone?: string | null
+          emergency_relationship?: string | null
+          first_name?: string | null
           full_name?: string
           gender?: string | null
           id?: string
+          id_type?: string | null
+          insurance_expiry?: string | null
+          insurance_member_number?: string | null
+          insurance_policy_number?: string | null
+          insurance_principal?: string | null
+          insurance_provider?: string | null
+          insurance_relationship?: string | null
+          insurance_scheme?: string | null
+          insurance_verified?: boolean
           is_chronic?: boolean
+          last_name?: string | null
+          last_visit_at?: string | null
+          marital_status?: string | null
+          middle_name?: string | null
+          mrn?: string | null
           national_id?: string | null
+          nationality?: string | null
           notes?: string | null
+          occupation?: string | null
           phone?: string | null
+          photo_url?: string | null
+          postal_address?: string | null
           preferred_channels?: string[]
+          preferred_name?: string | null
           registered_via?: string | null
           sha_number?: string | null
+          status?: string
+          tags?: string[]
           telegram_chat_id?: string | null
           tenant_id?: string
           updated_at?: string
@@ -1498,6 +2124,29 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      tenant_counters: {
+        Row: {
+          patient_seq: number
+          tenant_id: string
+        }
+        Insert: {
+          patient_seq?: number
+          tenant_id: string
+        }
+        Update: {
+          patient_seq?: number
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_counters_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tenants: {
         Row: {
