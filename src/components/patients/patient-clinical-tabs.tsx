@@ -48,8 +48,8 @@ export function PatientClinicalTabs({ patientId }: { patientId: string }) {
             { key: "identified_on", label: "Identified", render: (r) => dateText(r.identified_on) },
             { key: "notes", label: "Notes" },
           ]}
-          extraPayload={{ created_by: undefined }}
         />
+
       </TabsContent>
 
       <TabsContent value="diagnoses">
