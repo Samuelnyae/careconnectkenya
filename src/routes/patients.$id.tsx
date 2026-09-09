@@ -527,7 +527,10 @@ function PatientDetail() {
           </Card>
         </div>
       </div>
+
+      <PatientClinicalTabs patientId={id} />
     </div>
+
   );
 }
 
