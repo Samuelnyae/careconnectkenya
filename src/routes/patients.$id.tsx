@@ -23,13 +23,17 @@ export const Route = createFileRoute("/patients/$id")({
 });
 
 type Patient = {
-  id: string; full_name: string; date_of_birth: string | null; gender: string | null;
-  phone: string | null; email: string | null; sha_number: string | null;
-  national_id: string | null; address: string | null;
+  id: string; full_name: string; mrn: string | null; date_of_birth: string | null; gender: string | null;
+  phone: string | null; alt_phone: string | null; email: string | null; sha_number: string | null;
+  national_id: string | null; address: string | null; county: string | null;
+  status: string | null; tags: string[] | null;
+  insurance_provider: string | null; insurance_member_number: string | null;
+  emergency_name: string | null; emergency_relationship: string | null; emergency_phone: string | null;
   allergies: string | null; chronic_conditions: string | null; notes: string | null;
   whatsapp_number: string | null; telegram_chat_id: string | null;
   preferred_channels: string[] | null; is_chronic: boolean; chronic_review_date: string | null;
 };
+
 type Visit = { id: string; visit_date: string; reason: string | null; diagnosis: string | null; notes: string | null };
 type Rx = { id: string; drug_name: string; dosage: string | null; frequency: string | null; duration: string | null; instructions: string | null; created_at: string };
 type Lab = { id: string; test_name: string; test_category: string | null; result_value: string | null; result_unit: string | null; reference_range: string | null; status: string; notes: string | null; file_url: string | null; performed_at: string };
