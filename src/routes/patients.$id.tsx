@@ -16,20 +16,27 @@ import { useAuth } from "@/lib/auth-context";
 import { logAudit } from "@/lib/audit";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Plus, Stethoscope, Pill, AlertTriangle, ShieldCheck, Loader2, MessageSquare, FlaskConical, Bell, Upload, ExternalLink, HeartPulse } from "lucide-react";
+import { PatientClinicalTabs } from "@/components/patients/patient-clinical-tabs";
+import { ageFromDob } from "@/lib/patients";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/patients/$id")({
   component: () => <ProtectedLayout><PatientDetail /></ProtectedLayout>,
 });
 
 type Patient = {
-  id: string; full_name: string; date_of_birth: string | null; gender: string | null;
-  phone: string | null; email: string | null; sha_number: string | null;
-  national_id: string | null; address: string | null;
+  id: string; full_name: string; mrn: string | null; date_of_birth: string | null; gender: string | null;
+  phone: string | null; alt_phone: string | null; email: string | null; sha_number: string | null;
+  national_id: string | null; address: string | null; county: string | null;
+  status: string | null; tags: string[] | null;
+  insurance_provider: string | null; insurance_member_number: string | null;
+  emergency_name: string | null; emergency_relationship: string | null; emergency_phone: string | null;
   allergies: string | null; chronic_conditions: string | null; notes: string | null;
   whatsapp_number: string | null; telegram_chat_id: string | null;
   preferred_channels: string[] | null; is_chronic: boolean; chronic_review_date: string | null;
 };
+
 type Visit = { id: string; visit_date: string; reason: string | null; diagnosis: string | null; notes: string | null };
 type Rx = { id: string; drug_name: string; dosage: string | null; frequency: string | null; duration: string | null; instructions: string | null; created_at: string };
 type Lab = { id: string; test_name: string; test_category: string | null; result_value: string | null; result_unit: string | null; reference_range: string | null; status: string; notes: string | null; file_url: string | null; performed_at: string };
@@ -246,13 +253,25 @@ function PatientDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
+            <Row label="MRN" value={patient.mrn} />
             <Row label="DOB" value={patient.date_of_birth} />
+            <Row label="Age" value={ageFromDob(patient.date_of_birth) !== null ? `${ageFromDob(patient.date_of_birth)} years` : null} />
             <Row label="Gender" value={patient.gender} />
             <Row label="Phone" value={patient.phone} />
+            <Row label="Alt. phone" value={patient.alt_phone} />
             <Row label="Email" value={patient.email} />
             <Row label="SHA" value={patient.sha_number} />
+            <Row label="Insurance" value={patient.insurance_provider ? `${patient.insurance_provider}${patient.insurance_member_number ? ` · ${patient.insurance_member_number}` : ""}` : null} />
             <Row label="National ID" value={patient.national_id} />
             <Row label="Address" value={patient.address} />
+            <Row label="County" value={patient.county} />
+            <Row label="Next of kin" value={patient.emergency_name ? `${patient.emergency_name}${patient.emergency_relationship ? ` (${patient.emergency_relationship})` : ""}${patient.emergency_phone ? ` · ${patient.emergency_phone}` : ""}` : null} />
+            {(patient.tags ?? []).length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-1">
+                {(patient.tags ?? []).map((t) => <Badge key={t} variant="secondary" className="capitalize">{t}</Badge>)}
+              </div>
+            )}
+
             <div className="pt-2">
               <div className="text-xs uppercase text-muted-foreground">Allergies</div>
               <div className="text-sm">{patient.allergies || "—"}</div>
@@ -508,7 +527,10 @@ function PatientDetail() {
           </Card>
         </div>
       </div>
+
+      <PatientClinicalTabs patientId={id} />
     </div>
+
   );
 }
 
