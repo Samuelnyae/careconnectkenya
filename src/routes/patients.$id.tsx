@@ -16,7 +16,10 @@ import { useAuth } from "@/lib/auth-context";
 import { logAudit } from "@/lib/audit";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Plus, Stethoscope, Pill, AlertTriangle, ShieldCheck, Loader2, MessageSquare, FlaskConical, Bell, Upload, ExternalLink, HeartPulse } from "lucide-react";
+import { PatientClinicalTabs } from "@/components/patients/patient-clinical-tabs";
+import { ageFromDob } from "@/lib/patients";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/patients/$id")({
   component: () => <ProtectedLayout><PatientDetail /></ProtectedLayout>,
