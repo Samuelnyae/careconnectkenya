@@ -253,13 +253,25 @@ function PatientDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
+            <Row label="MRN" value={patient.mrn} />
             <Row label="DOB" value={patient.date_of_birth} />
+            <Row label="Age" value={ageFromDob(patient.date_of_birth) !== null ? `${ageFromDob(patient.date_of_birth)} years` : null} />
             <Row label="Gender" value={patient.gender} />
             <Row label="Phone" value={patient.phone} />
+            <Row label="Alt. phone" value={patient.alt_phone} />
             <Row label="Email" value={patient.email} />
             <Row label="SHA" value={patient.sha_number} />
+            <Row label="Insurance" value={patient.insurance_provider ? `${patient.insurance_provider}${patient.insurance_member_number ? ` · ${patient.insurance_member_number}` : ""}` : null} />
             <Row label="National ID" value={patient.national_id} />
             <Row label="Address" value={patient.address} />
+            <Row label="County" value={patient.county} />
+            <Row label="Next of kin" value={patient.emergency_name ? `${patient.emergency_name}${patient.emergency_relationship ? ` (${patient.emergency_relationship})` : ""}${patient.emergency_phone ? ` · ${patient.emergency_phone}` : ""}` : null} />
+            {(patient.tags ?? []).length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-1">
+                {(patient.tags ?? []).map((t) => <Badge key={t} variant="secondary" className="capitalize">{t}</Badge>)}
+              </div>
+            )}
+
             <div className="pt-2">
               <div className="text-xs uppercase text-muted-foreground">Allergies</div>
               <div className="text-sm">{patient.allergies || "—"}</div>
